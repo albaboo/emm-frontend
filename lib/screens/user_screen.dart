@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 
-import 'CarerScreen.dart';
-import 'HospitalScreen.dart';
-import 'MedicalScreen.dart';
-import 'PatientScreen.dart';
+import 'carer_screen.dart';
+import 'admin_screen.dart';
+import 'medical_screen.dart';
+import 'patient_screen.dart';
 
 class Userscreen extends StatelessWidget {
   const Userscreen({super.key});
@@ -107,7 +107,7 @@ class Userscreen extends StatelessWidget {
                         iconColor: Colors.cyan,
                         background: const Color(0xFFDDF7FB),
                         borderColor: const Color(0xFF48D4F2),
-                        screen: const HospitalScreen(),
+                        screen: const AdminScreen(),
                       ),
                     ],
                   ),

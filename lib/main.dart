@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/UserScreen.dart';
+import 'screens/user_screen.dart';
 
 void main() => runApp(const EmmApp());
 

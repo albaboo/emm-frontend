@@ -1,10 +1,10 @@
 
 
 import 'user_model.dart';
-class Hospital extends User {
+class Admin extends User {
   final String address;
 
-  const Hospital({
+  const Admin({
     required super.id,
     required super.name,
     required super.lastnames,

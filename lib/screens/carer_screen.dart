@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Carerscreen extends StatelessWidget {
+class CarerScreen extends StatelessWidget {
 
-  const Carerscreen({super.key});
+  const CarerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

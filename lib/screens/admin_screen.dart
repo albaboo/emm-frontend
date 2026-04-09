@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Hospitalscreen extends StatelessWidget {
+class AdminScreen extends StatelessWidget {
 
-  const Hospitalscreen({super.key});
+  const AdminScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

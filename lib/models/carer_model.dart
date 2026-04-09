@@ -1,5 +1,5 @@
-
 import 'user_model.dart';
+
 class Carer extends User {
   const Carer({
     required super.id,
