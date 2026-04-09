@@ -85,7 +85,7 @@ class Userscreen extends StatelessWidget {
                       _buildRoleCard(
                         context,
                         title: 'Familiar / Cuidador',
-                        subtitle: 'Acompaña ysupervisa',
+                        subtitle: 'Acompaña y supervisa',
                         icon: Icons.groups_outlined,
                         iconColor: Colors.green,
                         background: const Color(0xFFD9F7E4),

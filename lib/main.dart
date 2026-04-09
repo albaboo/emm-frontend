@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/UserScreen.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const EmmApp());
 
 class EmmApp extends StatelessWidget {
   const EmmApp({super.key});
