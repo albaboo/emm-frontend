@@ -1,6 +1,6 @@
-
-
 import 'package:flutter/material.dart';
+
+
 import 'CarerScreen.dart';
 import 'HospitalScreen.dart';
 import 'MedicalScreen.dart';
@@ -59,10 +59,7 @@ class Userscreen extends StatelessWidget {
                   const Text(
                     'Cuidado y apoyo para ti y los tuyos',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0xFF4A5568),
-                    ),
+                    style: TextStyle(fontSize: 20, color: Color(0xFF4A5568)),
                   ),
 
                   const SizedBox(height: 50),
@@ -119,12 +116,8 @@ class Userscreen extends StatelessWidget {
 
                   const Text(
                     'Selecciona tu rol para continuar',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFF4A5568),
-                    ),
+                    style: TextStyle(fontSize: 18, color: Color(0xFF4A5568)),
                   ),
-
                 ],
               ),
             ),
@@ -147,10 +140,7 @@ class Userscreen extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(28),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => screen),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
       },
       child: Container(
         width: 220,
