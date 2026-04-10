@@ -12,7 +12,7 @@ class EmmApp extends StatelessWidget {
     return MaterialApp(
       title: 'EMM',
       debugShowCheckedModeBanner: false,
-      home: const Userscreen(),
+      home: const UserScreen(),
     );
   }
 }

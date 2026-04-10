@@ -5,9 +5,10 @@ import 'carer_screen.dart';
 import 'admin_screen.dart';
 import 'medical_screen.dart';
 import 'patient_screen.dart';
+import '../widgets/logoEmm_widget.dart';
 
-class Userscreen extends StatelessWidget {
-  const Userscreen({super.key});
+class UserScreen extends StatelessWidget {
+  const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,30 +24,18 @@ class Userscreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.blue,
-                      size: 45,
+                    width: 300,
+                    height: 150,
+                   child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: logoWidget(),
                     ),
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 5),
 
                   const Text(
-                    'EMM',
+                    'Every Memory Matters',
                     style: TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.w500,
@@ -57,7 +46,7 @@ class Userscreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   const Text(
-                    'Cuidado y apoyo para ti y los tuyos',
+                    'Cerca en el cuidado, presente en cada momento',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, color: Color(0xFF4A5568)),
                   ),
@@ -81,9 +70,9 @@ class Userscreen extends StatelessWidget {
                       ),
                       _buildRoleCard(
                         context,
-                        title: 'Familiar / Cuidador',
+                        title: 'Cuidador',
                         subtitle: 'Acompaña y supervisa',
-                        icon: Icons.groups_outlined,
+                        icon: Icons.diversity_1,
                         iconColor: Colors.green,
                         background: const Color(0xFFD9F7E4),
                         borderColor: const Color(0xFF63D98A),
@@ -94,16 +83,16 @@ class Userscreen extends StatelessWidget {
                         title: 'Profesional\nde Salud',
                         subtitle: 'Gestiona pacientes',
                         icon: Icons.medical_services_outlined,
-                        iconColor: Colors.purple,
+                        iconColor: const Color.fromARGB(255, 176, 39, 48),
                         background: const Color(0xFFF0E2FF),
-                        borderColor: const Color(0xFFD1A3FF),
+                        borderColor:  const Color.fromARGB(255, 222, 145, 145),
                         screen: const MedicalScreen(),
                       ),
                       _buildRoleCard(
                         context,
                         title: 'Hospital',
                         subtitle: 'Administra usuarios',
-                        icon: Icons.business_outlined,
+                        icon: Icons.apartment,
                         iconColor: Colors.cyan,
                         background: const Color(0xFFDDF7FB),
                         borderColor: const Color(0xFF48D4F2),
