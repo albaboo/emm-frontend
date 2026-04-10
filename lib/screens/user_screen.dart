@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-
-import 'carer_screen.dart';
+import '../widgets/logoEmm_widget.dart';
 import 'admin_screen.dart';
+import 'carer_screen.dart';
 import 'medical_screen.dart';
 import 'patient_screen.dart';
-import '../widgets/logoEmm_widget.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -22,11 +21,10 @@ class UserScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-
-                  Container(
+                  SizedBox(
                     width: 300,
                     height: 150,
-                   child: Padding(
+                    child: Padding(
                       padding: const EdgeInsets.all(18),
                       child: logoWidget(),
                     ),
@@ -63,9 +61,9 @@ class UserScreen extends StatelessWidget {
                         title: 'Paciente',
                         subtitle: 'Accede a tus tareas diarias',
                         icon: Icons.favorite_border,
-                        iconColor: Colors.blue,
-                        background: const Color(0xFFDDEBFF),
-                        borderColor: const Color(0xFF7CB3FF),
+                        iconColor: Colors.purple,
+                        background: const Color(0xFFE8DDFF),
+                        borderColor: const Color(0xFFA87CFF),
                         screen: const PatientScreen(),
                       ),
                       _buildRoleCard(
@@ -85,7 +83,7 @@ class UserScreen extends StatelessWidget {
                         icon: Icons.medical_services_outlined,
                         iconColor: const Color.fromARGB(255, 176, 39, 48),
                         background: const Color(0xFFF0E2FF),
-                        borderColor:  const Color.fromARGB(255, 222, 145, 145),
+                        borderColor: const Color.fromARGB(255, 222, 145, 145),
                         screen: const MedicalScreen(),
                       ),
                       _buildRoleCard(
@@ -94,8 +92,8 @@ class UserScreen extends StatelessWidget {
                         subtitle: 'Administra usuarios',
                         icon: Icons.apartment,
                         iconColor: Colors.cyan,
-                        background: const Color(0xFFDDF7FB),
-                        borderColor: const Color(0xFF48D4F2),
+                        background: const Color(0xFFDDF6FB),
+                        borderColor: const Color(0xFF48D3F2),
                         screen: const AdminScreen(),
                       ),
                     ],
