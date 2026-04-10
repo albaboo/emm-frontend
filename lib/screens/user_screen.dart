@@ -34,6 +34,7 @@ class UserScreen extends StatelessWidget {
 
                   const Text(
                     'Every Memory Matters',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.w500,
