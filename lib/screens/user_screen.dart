@@ -1,3 +1,4 @@
+import 'package:emm_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/logoEmm_widget.dart';
@@ -65,7 +66,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.purple,
                         background: const Color(0xFFE8DDFF),
                         borderColor: const Color(0xFFA87CFF),
-                        screen: const PatientScreen(),
+                        screen:  LoginScreen(),
                       ),
                       _buildRoleCard(
                         context,
@@ -75,7 +76,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.green,
                         background: const Color(0xFFD9F7E4),
                         borderColor: const Color(0xFF63D98A),
-                        screen: const CarerScreen(),
+                        screen:  LoginScreen(),
                       ),
                       _buildRoleCard(
                         context,
@@ -85,7 +86,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: const Color.fromARGB(255, 176, 39, 48),
                         background: const Color(0xFFF0E2FF),
                         borderColor: const Color.fromARGB(255, 222, 145, 145),
-                        screen: const MedicalScreen(),
+                        screen:  LoginScreen(),
                       ),
                       _buildRoleCard(
                         context,
@@ -95,7 +96,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.cyan,
                         background: const Color(0xFFDDF6FB),
                         borderColor: const Color(0xFF48D3F2),
-                        screen: const AdminScreen(),
+                        screen:  LoginScreen(),
                       ),
                     ],
                   ),
