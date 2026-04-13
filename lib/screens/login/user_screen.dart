@@ -1,8 +1,8 @@
 import 'package:emm_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../core/enums/user_types.dart';
-import '../core/widgets/image.dart';
+import '../../core/enums/user_types.dart';
+import '../../core/widgets/image.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});

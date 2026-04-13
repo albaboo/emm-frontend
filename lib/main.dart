@@ -1,7 +1,6 @@
-import 'package:emm_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/login/login_screen.dart';
-import 'screens/user_screen.dart';
+
+import 'screens/login/user_screen.dart';
 
 void main() => runApp(const EmmApp());
 
@@ -11,10 +10,9 @@ class EmmApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     // title: 'EMM',
+      // title: 'EMM',
       debugShowCheckedModeBanner: false,
-     // home: LoginScreen(),
-     home: const UserScreen(),
+      home: const UserScreen(),
     );
   }
 }
