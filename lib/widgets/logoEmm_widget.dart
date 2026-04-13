@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
 Widget logoWidget() {
-  return Image.asset('lib/assets/family.png', width: 100);
+  return Image.asset('assets/image/family.png', width: 100);
 }

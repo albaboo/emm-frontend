@@ -1,5 +1,5 @@
-import 'package:emm_app/components/my_button.dart';
-import 'package:emm_app/components/my_textfield.dart';
+import 'package:emm_app/core/widgets/my_button.dart';
+import 'package:emm_app/core/widgets/my_textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/logoEmm_widget.dart';
