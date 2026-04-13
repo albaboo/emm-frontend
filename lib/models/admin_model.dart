@@ -1,18 +1,15 @@
-
-
 import 'user_model.dart';
-class Admin extends User {
-  final String address;
 
+class Admin extends User {
   const Admin({
     required super.id,
-    required super.name,
-    required super.lastnames,
-    required super.email,
-    required super.phone,
-    required super.password,
-    required super.gender,
-    required this.address,
+    required super.username,
     required super.type,
+    super.name,
+    super.lastnames,
+    super.email,
+    super.phone,
+    super.gender,
+    super.hospital,
   });
 }
