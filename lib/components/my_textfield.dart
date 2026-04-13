@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
-
-
 class MyTextfield extends StatelessWidget {
-
   final controller;
   final String hintText;
   final bool obscureText;
+  final IconData? icon;
 
   const MyTextfield({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    this.icon,
   });
 
   @override
@@ -22,11 +21,11 @@ class MyTextfield extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: obscureText,
-       decoration: InputDecoration(
+        decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
           hintText: hintText,
-
+          prefixIcon: icon != null ? Icon(icon) : null,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 20,
             horizontal: 20,
