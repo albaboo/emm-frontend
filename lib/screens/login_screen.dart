@@ -1,8 +1,8 @@
-import 'package:emm_app/core/widgets/my_button.dart';
-import 'package:emm_app/core/widgets/my_textfield.dart';
+import 'package:emm_app/core/widgets/button.dart';
+import 'package:emm_app/core/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/logoEmm_widget.dart';
+import '../core/widgets/image.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -21,10 +21,39 @@ class LoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 children: [
+                  SizedBox(
+                    width: 300,
+                    height: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: ImageWidget(path: 'assets/icon/icon_desktop.png'),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  const Text(
+                    'Every Memory Matters',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 42,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1D2A3A),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  const Text(
+                    'Cerca en el cuidado, presente en cada momento',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, color: Color(0xFF4A5568)),
+                  ),
+
                   const SizedBox(height: 50),
 
                   const Text(
-                    'Inicia sesión',
+                    'Iniciar sesión',
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w500,
@@ -52,24 +81,30 @@ class LoginScreen extends StatelessWidget {
                       width: 300,
                       child: Column(
                         children: [
-                          MyTextfield(
+                          InputTextWidget(
                             controller: usernameController,
                             hintText: 'Username',
                             obscureText: false,
                             icon: Icons.person,
                           ),
                           const SizedBox(height: 20),
-                          MyTextfield(
+                          InputTextWidget(
                             controller: passwordController,
                             hintText: 'Password',
                             obscureText: true,
                             icon: Icons.lock,
                           ),
                           const SizedBox(height: 30),
-                          MyButton(),
+                          ButtonWidget(text: 'Continuar'),
                         ],
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  const Text(
+                    'EMM by Alba & Oumayma',
+                    style: TextStyle(fontSize: 18, color: Color(0xFF4A5568)),
                   ),
                 ],
               ),

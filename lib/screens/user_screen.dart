@@ -1,7 +1,7 @@
 import 'package:emm_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/logoEmm_widget.dart';
+import '../core/widgets/image.dart';
 import 'admin_screen.dart';
 import 'carer_screen.dart';
 import 'medical_screen.dart';
@@ -27,7 +27,7 @@ class UserScreen extends StatelessWidget {
                     height: 150,
                     child: Padding(
                       padding: const EdgeInsets.all(18),
-                      child: logoWidget(),
+                      child: ImageWidget(),
                     ),
                   ),
 
@@ -52,6 +52,14 @@ class UserScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 50),
+
+                  const Text(
+                    'Selecciona tu rol para continuar',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, color: Color(0xFF4A5568)),
+                  ),
+
+                  const SizedBox(height: 40),
 
                   Wrap(
                     spacing: 20,
@@ -104,8 +112,9 @@ class UserScreen extends StatelessWidget {
                   const SizedBox(height: 40),
 
                   const Text(
-                    'Selecciona tu rol para continuar',
-                    style: TextStyle(fontSize: 18, color: Color(0xFF4A5568)),
+                    'Develop with love by Alba & Oumayma',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15, color: Color(0xFF4A5568)),
                   ),
                 ],
               ),
