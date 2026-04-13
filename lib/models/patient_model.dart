@@ -14,8 +14,7 @@ class Patient extends User {
     required super.gender,
     required this.birthdate,
     required this.grade,
+    required super.type,
   });
 
-  @override
-  String get role => 'Patient';
 }

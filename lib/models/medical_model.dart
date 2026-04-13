@@ -1,5 +1,5 @@
-
 import 'user_model.dart';
+
 class Medical extends User {
   final String title;
   final String department;
@@ -14,8 +14,6 @@ class Medical extends User {
     required super.gender,
     required this.title,
     required this.department,
+    required super.type,
   });
-
-  @override
-  String get role => 'Medical';
 }

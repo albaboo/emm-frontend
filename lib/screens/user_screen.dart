@@ -1,11 +1,8 @@
-import 'package:emm_app/screens/login_screen.dart';
+import 'package:emm_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../core/enums/user_types.dart';
 import '../core/widgets/image.dart';
-import 'admin_screen.dart';
-import 'carer_screen.dart';
-import 'medical_screen.dart';
-import 'patient_screen.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -74,7 +71,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.purple,
                         background: const Color(0xFFE8DDFF),
                         borderColor: const Color(0xFFA87CFF),
-                        screen:  LoginScreen(),
+                        screen: LoginScreen(type: UserType.patient),
                       ),
                       _buildRoleCard(
                         context,
@@ -84,7 +81,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.green,
                         background: const Color(0xFFD9F7E4),
                         borderColor: const Color(0xFF63D98A),
-                        screen:  LoginScreen(),
+                        screen: LoginScreen(type: UserType.carer),
                       ),
                       _buildRoleCard(
                         context,
@@ -94,7 +91,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: const Color.fromARGB(255, 176, 39, 48),
                         background: const Color(0xFFF0E2FF),
                         borderColor: const Color.fromARGB(255, 222, 145, 145),
-                        screen:  LoginScreen(),
+                        screen: LoginScreen(type: UserType.medical),
                       ),
                       _buildRoleCard(
                         context,
@@ -104,7 +101,7 @@ class UserScreen extends StatelessWidget {
                         iconColor: Colors.cyan,
                         background: const Color(0xFFDDF6FB),
                         borderColor: const Color(0xFF48D3F2),
-                        screen:  LoginScreen(),
+                        screen: LoginScreen(type: UserType.admin),
                       ),
                     ],
                   ),

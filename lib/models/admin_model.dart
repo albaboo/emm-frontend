@@ -13,8 +13,6 @@ class Admin extends User {
     required super.password,
     required super.gender,
     required this.address,
+    required super.type,
   });
-
-  @override
-  String get role => 'Hospital';
 }

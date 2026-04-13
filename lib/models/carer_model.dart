@@ -9,8 +9,7 @@ class Carer extends User {
     required super.phone,
     required super.password,
     required super.gender,
+    required super.type,
   });
 
-  @override
-  String get role => 'Carer';
 }
