@@ -1,4 +1,4 @@
-import 'package:emm_app/screens/login/login_screen.dart';
+import 'package:emm_app/features/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/enums/user_types.dart';
@@ -87,7 +87,7 @@ class UserScreen extends StatelessWidget {
                         context,
                         title: 'Profesional\nde Salud',
                         subtitle: 'Gestiona pacientes',
-                        icon: Icons.medical_services_outlined,
+                        icon: Icons.medical_services,
                         iconColor: const Color.fromARGB(255, 176, 39, 48),
                         background: const Color(0xFFF0E2FF),
                         borderColor: const Color.fromARGB(255, 222, 145, 145),
