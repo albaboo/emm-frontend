@@ -1,10 +1,18 @@
 import 'package:emm_app/core/enums/user_types.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/widgets/button.dart';
 import '../../core/widgets/image.dart';
 import '../../core/widgets/textfield.dart';
+import '../../factories/user_factory.dart';
+import '../../providers/user_provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/storage_service.dart';
+import '../admin/admin_screen.dart';
+import '../carer_screen.dart';
+import '../medical_screen.dart';
+import '../patient_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final UserType type;
@@ -96,13 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ButtonWidget(
                             text: 'Continuar',
                             onPressed: () async {
-                              final user = usernameController.text;
-                              final pass = passwordController.text;
+                              final username = usernameController.text;
+                              final password = passwordController.text;
 
                               setState(() => isLoading = true);
 
                               try {
-                                if (user.isEmpty || pass.isEmpty) {
+                                if (username.isEmpty || password.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -114,10 +122,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
 
                                 final result = await authService.login(
-                                  user,
-                                  pass,
+                                  username,
+                                  password,
                                   widget.type,
                                 );
+
+                                await StorageService.saveToken(result['token']);
 
                                 if (!context.mounted) return;
 
@@ -128,19 +138,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 );
 
-                                //final token = result['token'];
-                                //final userData = result['user'];
+                                if (context.mounted) {
+                                  context.read<UserProvider>().setUser(
+                                    UserFactory.fromJson(result['user']),
+                                  );
+                                }
 
-                                //TODO: Añadir preferencias y guardar token
-                                //TODO: Redirigir a pantalla correspondiente
-                                //TODO: Mirar donde guardar el user
-                                // Navigator.pushReplacementNamed(context, '/home');
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Inicio de sesión fallido'),
-                                  ),
-                                );
+                                final user = context.read<UserProvider>().user;
+
+                                if (user != null) {
+                                  final nextScreen = _getHomeScreen(user.type);
+
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => nextScreen,
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                              } on Error catch (e) {
+                                final data = e.toString();
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(SnackBar(content: Text(data)));
                               } finally {
                                 if (mounted) setState(() => isLoading = false);
                               }
@@ -164,5 +185,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+}
+
+Widget _getHomeScreen(UserType type) {
+  switch (type) {
+    case UserType.patient:
+      return const PatientScreen();
+    case UserType.medical:
+      return const MedicalScreen();
+    case UserType.carer:
+      return const CarerScreen();
+    case UserType.admin:
+      return const AdminScreen();
   }
 }

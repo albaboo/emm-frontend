@@ -1,10 +1,22 @@
-import 'package:emm_app/screens/login/login_screen.dart';
+import 'package:emm_app/providers/admin_provider.dart';
+import 'package:emm_app/services/admin_service.dart';
 import 'package:emm_app/screens/medical/form_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/login/login_screen.dart';
-import 'screens/user_screen.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const EmmApp());
+import 'features/login/user_screen.dart';
+import 'providers/user_provider.dart';
+
+void main() => runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+
+      ChangeNotifierProvider(create: (_) => AdminProvider(AdminService())),
+    ],
+    child: const EmmApp(),
+  ),
+);
 
 class EmmApp extends StatelessWidget {
   const EmmApp({super.key});
@@ -12,11 +24,9 @@ class EmmApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     // title: 'EMM',
+      // title: 'EMM',
       debugShowCheckedModeBanner: false,
-     // home: LoginScreen(),
-    // home: const UserScreen(),
-     home: FormScreen(),
+      home: const UserScreen(),
     );
   }
 }
