@@ -1,3 +1,5 @@
+import 'package:emm_app/features/admin/admin_screen.dart';
+import 'package:emm_app/features/medical/widgets/form_screen.dart';
 import 'package:emm_app/providers/admin_provider.dart';
 import 'package:emm_app/services/admin_service.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,8 @@ class EmmApp extends StatelessWidget {
     return MaterialApp(
       // title: 'EMM',
       debugShowCheckedModeBanner: false,
-      home: const UserScreen(),
+    // home: const UserScreen(),
+   home : FormScreen(),
     );
   }
 }

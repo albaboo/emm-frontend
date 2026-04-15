@@ -1,6 +1,6 @@
 
-import 'package:emm_app/core/utils/list_config.dart';
 import 'package:flutter/material.dart';
+import 'task_widgets.dart';
 
 
 
@@ -13,9 +13,7 @@ class FormScreen extends StatefulWidget  {
 
 class _FormScreenState extends State<FormScreen> {
 
-  bool showTasks = false;
-
-  List<String> tasks = ["Tarea 1", "Tarea 2"];
+  
 
 
 
@@ -167,31 +165,37 @@ class _FormScreenState extends State<FormScreen> {
                 ),
                 
                 //minilist:
-                Expanded(child: ListView(
-                    children: [
-                      
-                       ListConfig(
-                        icon:  Icons.checklist_rtl,  
-                        color: Colors.lightGreen,
-                        listName: 'Tipo de Tareas',
-                        subName: ' 2 Tareas pendientes',
-                      ),
-                 
-                      ListConfig(
-                        icon:  Icons.auto_awesome_mosaic,  
-                        listName: 'Grupo de Tareas',
-                        color : const Color.fromARGB(255, 146, 146, 199),
-                        subName: 'grupo de tareas',
-                      ),
-                      ListConfig(
-                         icon:  Icons.contact_support,  
-                        listName: 'Guia de Ayuda',
-                        color: Colors.amber,
-                        subName: 'help guide',
-                      ),
+                Expanded(
+                    child: ListView(
+                      children: [
 
-                    ],
-                ))
+                        sectionTile(
+                          icon: Icons.checklist_rtl,
+                          color: Colors.lightGreen,
+                          title: "Tipo de Tareas",
+                          subtitle: "2 tareas pendientes",
+                          items: ["Tarea 1", "Tarea 2"],
+                        ),
+
+                        sectionTile(
+                          icon: Icons.auto_awesome_mosaic,
+                          color: const Color.fromARGB(255, 146, 146, 199),
+                          title: "Grupo de Tareas",
+                          subtitle: "Lista de grupos",
+                          items: ["Tarea 1", "Tarea 2", "Tarea 3"],
+                        ),
+
+                        sectionTile(
+                          icon: Icons.contact_support,
+                          color: Colors.amber,
+                          title: "Guía de Ayuda",
+                          subtitle: "Pasos de ayuda",
+                          items: ["Paso 1", "Paso 2", "Paso 3"],
+                        ),
+
+                      ],
+                    ),
+                  )
 
              
             ],
