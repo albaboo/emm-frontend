@@ -16,7 +16,10 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
   final email = TextEditingController();
   final password = TextEditingController();
   final birthdate = TextEditingController();
+  final lastnames = TextEditingController();
+  final phone = TextEditingController();
 
+  String gender = "UNKNOWN";
   String role = "MEDICAL";
 
   @override
@@ -24,66 +27,140 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
     return AlertDialog(
       title: const Text("Nuevo Usuario"),
 
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: username,
-            decoration: const InputDecoration(labelText: "Username"),
-          ),
-          TextField(
-            controller: name,
-            decoration: const InputDecoration(labelText: "Nombre"),
-          ),
-          TextField(
-            controller: email,
-            decoration: const InputDecoration(labelText: "Email"),
-          ),
-          TextField(
-            controller: password,
-            decoration: const InputDecoration(labelText: "Password"),
-          ),
-
-          if (role == "PATIENT")
-            GestureDetector(
-              onTap: () async {
-                final DateTime? selectedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                );
-
-                if (selectedDate != null) {
-                  setState(() {
-                    birthdate.text =
-                    selectedDate.toIso8601String().split('T')[0];
-                  });
-                }
-              },
-              child: AbsorbPointer(
-                child: TextField(
+      content: SizedBox(
+        width: 600,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: username,
+                      decoration: const InputDecoration(labelText: "Username"),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  Expanded(
+                    child: TextField(
+                      controller: password,
+                      decoration: const InputDecoration(labelText: "Password"),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: name,
+                      decoration: const InputDecoration(labelText: "Nombre"),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  Expanded(
+                    child: TextField(
+                      controller: lastnames,
+                      decoration: const InputDecoration(labelText: "Apellidos"),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: email,
+                      decoration: const InputDecoration(labelText: "Email"),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  Expanded(
+                    child: TextField(
+                      controller: phone,
+                      decoration: const InputDecoration(labelText: "Teléfono"),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: gender,
+                      onChanged: (v) => setState(() => gender = v!),
+                      items: const [
+                        DropdownMenuItem(
+                          value: "MALE",
+                          child: Text("Masculino"),
+                        ),
+                        DropdownMenuItem(
+                          value: "FEMALE",
+                          child: Text("Femenino"),
+                        ),
+                        DropdownMenuItem(
+                          value: "UNKNOWN",
+                          child: Text("No especificado"),
+                        ),
+                      ],
+                      decoration: const InputDecoration(labelText: "Género"),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: role,
+                      onChanged: (v) => setState(() => role = v!),
+                      items: const [
+                        DropdownMenuItem(
+                          value: "MEDICAL",
+                          child: Text("Médico"),
+                        ),
+                        DropdownMenuItem(
+                          value: "PATIENT",
+                          child: Text("Paciente"),
+                        ),
+                        DropdownMenuItem(
+                          value: "CARER",
+                          child: Text("Cuidador"),
+                        ),
+                      ],
+                      decoration: const InputDecoration(labelText: "Rol"),
+                    ),
+                  ),
+                ],
+              ),
+              if (role == "PATIENT")
+                const SizedBox(height: 25),
+                TextField(
                   controller: birthdate,
+                  readOnly: true,
                   decoration: const InputDecoration(
                     labelText: "Fecha de nacimiento",
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+
+                    if (date != null) {
+                      setState(() {
+                        birthdate.text = date.toIso8601String().split('T')[0];
+                      });
+                    }
+                  },
                 ),
-              ),
-            ),
-
-          const SizedBox(height: 10),
-
-          DropdownButton<String>(
-            value: role,
-            onChanged: (v) => setState(() => role = v!),
-            items: const [
-              DropdownMenuItem(value: "MEDICAL", child: Text("Médico")),
-              DropdownMenuItem(value: "PATIENT", child: Text("Paciente")),
-              DropdownMenuItem(value: "CARER", child: Text("Cuidador")),
             ],
           ),
-        ],
+        ),
       ),
 
       actions: [
@@ -105,7 +182,9 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
 
             if (role == "PATIENT" && birthdate.text.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Fecha de nacimiento obligatoria")),
+                const SnackBar(
+                  content: Text("Fecha de nacimiento obligatoria"),
+                ),
               );
               return;
             }
@@ -114,20 +193,22 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
               await provider.createUser({
                 "username": username.text,
                 "name": name.text,
-                "email": email.text,
+                "lastnames": lastnames.text,
+                "email": email.text.isEmpty ? null : email.text,
+                "phone": phone.text.isEmpty ? null : phone.text,
                 "password": password.text,
                 "type": role,
+                "gender": gender,
                 if (role == "PATIENT") "birthdate": birthdate.text,
               });
 
               if (!context.mounted) return;
 
               Navigator.pop(context);
-
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(e.toString())),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(e.toString())));
             }
           },
           child: const Text("Crear"),

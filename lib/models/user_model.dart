@@ -1,5 +1,6 @@
 import 'package:emm_app/models/hospital_model.dart';
 
+import '../core/enums/gender.dart';
 import '../core/enums/user_types.dart';
 
 abstract class User {
@@ -9,7 +10,7 @@ abstract class User {
   final String? lastnames;
   final String? email;
   final String? phone;
-  final String? gender;
+  final Gender? gender;
   final UserType type;
   final Hospital? hospital;
 
