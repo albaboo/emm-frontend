@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'task_widgets.dart';
+import '../../../providers/typetask_provider.dart';
+import '../../../models/typetask_model.dart';
 
-
-
-class FormScreen extends StatefulWidget  {
+class FormScreen extends StatefulWidget {
   const FormScreen({super.key});
 
   @override
@@ -12,12 +13,149 @@ class FormScreen extends StatefulWidget  {
 }
 
 class _FormScreenState extends State<FormScreen> {
+  final TextEditingController _taskController = TextEditingController();
 
-  
+  IconData _selectedIcon = Icons.task;
+  Color _selectedColor = Colors.blue;
 
+  final List<Color> _colors = [
+    Colors.blue,
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.purple,
+    Colors.orange,
+  ];
 
+  final List<IconData> _icons = [
+    Icons.task,
+    Icons.work,
+    Icons.home,
+    Icons.star,
+    Icons.check_circle,
+    Icons.alarm,
+  ];
 
+  // stats
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<TypeTaskProvider>().loadTasks();
+    });
+  }
+
+  //  DIALOG
+  void _openAddTaskDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text("Añadir tarea"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _taskController,
+                    decoration: const InputDecoration(
+                      labelText: "Título de la tarea",
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  Wrap(
+                    spacing: 8,
+                    children: _icons.map((icon) {
+                      return GestureDetector(
+                        onTap: () {
+                          setStateDialog(() {
+                            _selectedIcon = icon;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: _selectedIcon == icon
+                                ? Colors.grey.shade300
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(icon),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Wrap(
+                    spacing: 10,
+                    children: _colors.map((color) {
+                      return GestureDetector(
+                        onTap: () {
+                          setStateDialog(() {
+                            _selectedColor = color;
+                          });
+                        },
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: _selectedColor == color
+                                  ? Colors.black
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancelar"),
+                ),
+
+                // BOTÓN
+                ElevatedButton(
+                  onPressed: () async {
+                    final task = TypeTask(
+                      title: _taskController.text,
+                      icon: _selectedIcon.codePoint.toString(),
+                      color: _selectedColor.value.toString(),
+                    );
+
+                    await context
+                        .read<TypeTaskProvider>()
+                        .createTask(task.toJson());
+
+                    _taskController.clear();
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Añadir"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final provider = context.watch<TypeTaskProvider>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3FA),
       body: SafeArea(
@@ -25,179 +163,49 @@ class _FormScreenState extends State<FormScreen> {
           padding: const EdgeInsets.all(25.0),
           child: Column(
             children: [
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-
-                  // Panel profesional 
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.medical_services,
-                        size: 40,
-                        color: Color.fromARGB(255, 221, 50, 82),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Panel Profesional',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  
-                  Row(
-                    children: [
-
-                      // Dar alta usuario
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        margin: EdgeInsets.only(right: 8),
-                        child: Icon(
-                          Icons.person_add,
-                          color: Colors.white,
-                        ),
-                      ),
-
-                      // Consultas 
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 134, 81, 180),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        margin: EdgeInsets.only(right: 8),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.description,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 6),
-                            Text(
-                              'Consultas',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // out
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 30, 28, 32),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.output,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               const SizedBox(height: 30),
-              // config
 
-             Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 67, 58, 154),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                        margin: EdgeInsets.only(right: 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 6),
-                            Text(
-                              'Configuración',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-             ),
-
-
-                ///List:
-                //1:search bar : 
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      ),
-                       SizedBox(
-                       width : 5
-                       ),
-                       Text(
-                        'Buscar...',
-                        style: TextStyle(
-                          color:Colors.white,
-                        ),
-                       )
-
-                    ],
-                  ),
+              const Text(
+                'Panel Profesional',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
-                
-                //minilist:
-                Expanded(
-                    child: ListView(
-                      children: [
+              ),
 
-                        sectionTile(
-                          icon: Icons.checklist_rtl,
-                          color: Colors.lightGreen,
-                          title: "Tipo de Tareas",
-                          subtitle: "2 tareas pendientes",
-                          items: ["Tarea 1", "Tarea 2"],
-                        ),
+              const SizedBox(height: 20),
 
-                        sectionTile(
-                          icon: Icons.auto_awesome_mosaic,
-                          color: const Color.fromARGB(255, 146, 146, 199),
-                          title: "Grupo de Tareas",
-                          subtitle: "Lista de grupos",
-                          items: ["Tarea 1", "Tarea 2", "Tarea 3"],
-                        ),
-
-                        sectionTile(
-                          icon: Icons.contact_support,
-                          color: Colors.amber,
-                          title: "Guía de Ayuda",
-                          subtitle: "Pasos de ayuda",
-                          items: ["Paso 1", "Paso 2", "Paso 3"],
-                        ),
-
-                      ],
+              Expanded(
+                child: ListView(
+                  children: [
+                    sectionTile(
+                      icon: Icons.checklist_rtl,
+                      color: Colors.lightGreen,
+                      title: "Tipo de Tareas",
+                      subtitle: "Tareas creadas",
+                      items:
+                          provider.tasks.map((t) => t.title).toList(),
+                      onAdd: _openAddTaskDialog,
                     ),
-                  )
 
-             
+                    sectionTile(
+                      icon: Icons.auto_awesome_mosaic,
+                      color: const Color.fromARGB(255, 146, 146, 199),
+                      title: "Grupo de Tareas",
+                      subtitle: "Lista de grupos",
+                      items: ["Grupo 1", "Grupo 2", "Grupo 3"],
+                    ),
+
+                    sectionTile(
+                      icon: Icons.contact_support,
+                      color: Colors.amber,
+                      title: "Guía de Ayuda",
+                      subtitle: "Pasos de ayuda",
+                      items: ["Paso 1", "Paso 2", "Paso 3"],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
