@@ -25,4 +25,7 @@ abstract class User {
     this.gender,
     this.hospital,
   });
+
+  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJsonBase();
 }

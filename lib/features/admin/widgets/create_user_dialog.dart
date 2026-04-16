@@ -1,7 +1,10 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../providers/admin_provider.dart';
+import '../../../models/carer_model.dart';
+import '../../../models/medical_model.dart';
 
 class CreateUserDialog extends StatefulWidget {
   const CreateUserDialog({super.key});
@@ -18,7 +21,11 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
   final birthdate = TextEditingController();
   final lastnames = TextEditingController();
   final phone = TextEditingController();
+  final grade = TextEditingController();
+  final lastVisit = TextEditingController();
 
+  Medical? selectedMedical;
+  List<Carer> selectedCarers = [];
   String gender = "UNKNOWN";
   String role = "MEDICAL";
 
@@ -134,7 +141,7 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                   ),
                 ],
               ),
-              if (role == "PATIENT")
+              if (role == "PATIENT") ... [
                 const SizedBox(height: 25),
                 TextField(
                   controller: birthdate,
@@ -158,6 +165,140 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                     }
                   },
                 ),
+                const SizedBox(height: 25),
+
+                TextField(
+                  controller: grade,
+                  decoration: const InputDecoration(labelText: "Grado"),
+                ),
+
+                const SizedBox(height: 20),
+
+                TextField(
+                  controller: lastVisit,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: "Última visita",
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+
+                    if (date != null) {
+                      setState(() {
+                        lastVisit.text = date.toIso8601String().split('T')[0];
+                      });
+                    }
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                // MEDICAL SELECT
+                DropdownSearch<Medical>(
+                  selectedItem: selectedMedical,
+                  items: context.read<AdminProvider>().medicals,
+
+                  itemAsString: (m) => "${m.name ?? ''} ${m.lastnames ?? ''}",
+
+                  onChanged: (v) => setState(() => selectedMedical = v),
+
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+
+                    searchFieldProps: const TextFieldProps(
+                      decoration: InputDecoration(
+                        labelText: "Buscar médico",
+                      ),
+                    ),
+
+                    itemBuilder: (context, item, isSelected) {
+                      return ListTile(
+                        title: Text("${item.name ?? ''} ${item.lastnames ?? ''}"),
+                        subtitle: Text(item.username),
+                      );
+                    },
+                  ),
+
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      labelText: "Médico",
+                    ),
+                  ),
+                ),
+                /**DropdownButtonFormField<Medical>(
+                  initialValue: selectedMedical,
+                  items: context
+                      .read<AdminProvider>()
+                      .medicals
+                      .map((m) => DropdownMenuItem(
+                    value: m,
+                    child: Text(m.name ?? m.username),
+                  ))
+                      .toList(),
+                  onChanged: (v) => setState(() => selectedMedical = v),
+                  decoration: const InputDecoration(labelText: "Médico"),
+                ),*/
+
+                const SizedBox(height: 20),
+
+                // CARERS MULTI SELECT (simple versión)
+                DropdownSearch<Carer>.multiSelection(
+                  items: context.read<AdminProvider>().carers,
+                  selectedItems: selectedCarers,
+
+                  itemAsString: (c) => "${c.name ?? ''} ${c.lastnames ?? ''}",
+
+                  onChanged: (List<Carer> values) {
+                    setState(() {
+                      selectedCarers = values;
+                    });
+                  },
+
+                  popupProps: PopupPropsMultiSelection.menu(
+                    showSearchBox: true,
+                    searchFieldProps: const TextFieldProps(
+                      decoration: InputDecoration(
+                        labelText: "Buscar cuidador",
+                      ),
+                    ),
+                  ),
+
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      labelText: "Cuidadores",
+                    ),
+                  ),
+                ),
+                /**Wrap(
+                  spacing: 8,
+                  children: context
+                      .read<AdminProvider>()
+                      .carers
+                      .map((c) {
+                    final selected = selectedCarers.contains(c);
+
+                    return FilterChip(
+                      label: Text(c.name ?? c.username),
+                      selected: selected,
+                      onSelected: (v) {
+                        setState(() {
+                          if (v) {
+                            selectedCarers.add(c);
+                          } else {
+                            selectedCarers.remove(c);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),*/
+              ]
             ],
           ),
         ),
@@ -199,7 +340,13 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                 "password": password.text,
                 "type": role,
                 "gender": gender,
-                if (role == "PATIENT") "birthdate": birthdate.text,
+                if (role == "PATIENT") ...{
+                  "birthdate": birthdate.text,
+                  "grade": grade.text.isEmpty ? null : grade.text,
+                  "lastVisit": lastVisit.text.isEmpty ? null : lastVisit.text,
+                  "medical": selectedMedical?.toJson(),
+                  "carers": selectedCarers.map((c) => c.toJson()).toList(),
+                }
               });
 
               if (!context.mounted) return;

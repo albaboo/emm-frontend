@@ -17,4 +17,25 @@ class Hospital {
     required this.email,
     this.users,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "address": address,
+      "phone": phone,
+      "email": email,
+      "users": users?.map((u) => u.toJsonBase()).toList(),
+    };
+  }
+
+  Map<String, dynamic> toJsonBase() {
+    return {
+      "id": id,
+      "name": name,
+      "address": address,
+      "phone": phone,
+      "email": email,
+    };
+  }
 }

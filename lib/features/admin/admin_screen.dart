@@ -1,3 +1,4 @@
+import 'package:emm_app/features/admin/widgets/edit_user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,14 +46,8 @@ class _AdminScreenState extends State<AdminScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Text(
-              "Panel Hospital",
-              style: TextStyle(fontSize: 25),
-            ),
-            Text(
-              "Gestión de usuarios",
-              style: TextStyle(fontSize: 16),
-            ),
+            Text("Panel Hospital", style: TextStyle(fontSize: 25)),
+            Text("Gestión de usuarios", style: TextStyle(fontSize: 16)),
           ],
         ),
         actions: [
@@ -261,24 +256,16 @@ class _AdminScreenState extends State<AdminScreen> {
                                     ],
                                   ),
                                 ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit_outlined, color: Colors.blueGrey, size: 32),
+                                  tooltip: "Editar",
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
 
-                                // INDICADOR DE ROL
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    u.type.value.toUpperCase(),
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                                      builder: (_) => EditUserDialog(userId: u.id),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -369,9 +356,7 @@ class _Stat extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isSelected
-              ? iconColor
-              : iconColor.withValues(alpha: 0.3),
+          color: isSelected ? iconColor : iconColor.withValues(alpha: 0.3),
           width: isSelected ? 2.5 : 1.5,
         ),
         boxShadow: const [

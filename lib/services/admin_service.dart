@@ -22,6 +22,17 @@ class AdminService {
     }
   }
 
+  /// GET /users/{id}
+  Future<User> get(int id) async {
+    try {
+      final response = await dio.get('/users/$id');
+      return UserFactory.fromJson(response.data);
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Error al obtener usuario';
+      throw Exception(msg);
+    }
+  }
+
   /// POST /users
   Future<User> add(Map<String, dynamic> body) async {
     try {
@@ -33,6 +44,17 @@ class AdminService {
       return UserFactory.fromJson(response.data['user']);
     } on DioException catch (e) {
       final msg = e.response?.data?['message'] ?? 'Error al crear usuario';
+      throw Exception(msg);
+    }
+  }
+
+  /// PUT /users/{id}
+  Future<User> update(int id, Map<String, dynamic> body) async {
+    try {
+      final response = await dio.put('/users/$id', data: body);
+      return UserFactory.fromJson(response.data['user']);
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Error al editar usuario';
       throw Exception(msg);
     }
   }
