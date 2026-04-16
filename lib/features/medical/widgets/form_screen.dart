@@ -19,24 +19,26 @@ class _FormScreenState extends State<FormScreen> {
   Color _selectedColor = Colors.blue;
 
   final List<Color> _colors = [
-    Colors.blue,
-    Colors.red,
-    Colors.yellow,
-    Colors.green,
-    Colors.purple,
-    Colors.orange,
+    const Color(0xFF8DB2D1),
+    const Color(0xFFE25A51),
+    const Color(0xFFE0D56D),
+    const Color(0xFF39723B),
+    const Color(0xFF6B2977),
+    const Color(0xFF74562A),
   ];
 
   final List<IconData> _icons = [
     Icons.task,
-    Icons.work,
+    Icons.medication_liquid,
     Icons.home,
-    Icons.star,
-    Icons.check_circle,
-    Icons.alarm,
+    Icons.phone,
+    Icons.menu_book,
+    Icons.coffee,
+    Icons.bathtub,
+    Icons.restaurant_menu,
+    Icons.live_tv,
   ];
 
-  // stats
   @override
   void initState() {
     super.initState();
@@ -46,7 +48,6 @@ class _FormScreenState extends State<FormScreen> {
     });
   }
 
-  //  DIALOG
   void _openAddTaskDialog() {
     showDialog(
       context: context,
@@ -71,9 +72,7 @@ class _FormScreenState extends State<FormScreen> {
                     children: _icons.map((icon) {
                       return GestureDetector(
                         onTap: () {
-                          setStateDialog(() {
-                            _selectedIcon = icon;
-                          });
+                          setStateDialog(() => _selectedIcon = icon);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8),
@@ -96,9 +95,7 @@ class _FormScreenState extends State<FormScreen> {
                     children: _colors.map((color) {
                       return GestureDetector(
                         onTap: () {
-                          setStateDialog(() {
-                            _selectedColor = color;
-                          });
+                          setStateDialog(() => _selectedColor = color);
                         },
                         child: Container(
                           width: 25,
@@ -119,14 +116,11 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                 ],
               ),
-
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text("Cancelar"),
                 ),
-
-                // BOTÓN
                 ElevatedButton(
                   onPressed: () async {
                     final task = TypeTask(
@@ -157,58 +151,186 @@ class _FormScreenState extends State<FormScreen> {
     final provider = context.watch<TypeTaskProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3FA),
+      backgroundColor: const Color(0xFFF6F7FB),
+
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 25),
 
+              //  TITULO
               const Text(
                 'Panel Profesional',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xFF1D2A3A),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              Expanded(
-                child: ListView(
-                  children: [
-                    sectionTile(
-                      icon: Icons.checklist_rtl,
-                      color: Colors.lightGreen,
-                      title: "Tipo de Tareas",
-                      subtitle: "Tareas creadas",
-                      items:
-                          provider.tasks.map((t) => t.title).toList(),
-                      onAdd: _openAddTaskDialog,
+              //  STATS
+              Row(
+                children: [
+                  Expanded(
+                    child: _Stat(
+                      "Configuracion",
+                      provider.tasks.length,
+                      icon: Icons.settings,
+                      iconColor: Colors.lightGreen,
+                      isSelected: true,
                     ),
-
-                    sectionTile(
-                      icon: Icons.auto_awesome_mosaic,
-                      color: const Color.fromARGB(255, 146, 146, 199),
-                      title: "Grupo de Tareas",
-                      subtitle: "Lista de grupos",
-                      items: ["Grupo 1", "Grupo 2", "Grupo 3"],
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: _Stat(
+                      "Pacientes",
+                      _icons.length,
+                      icon: Icons.account_box,
+                      iconColor: Colors.purple,
+                      isSelected: false,
                     ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: _Stat(
+                      "Alertas Activas",
+                      _colors.length,
+                      icon: Icons.add_alert,
+                      iconColor: Colors.orange,
+                      isSelected: false,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: _Stat(
+                      "Tareas Hoy",
+                      provider.tasks.length,
+                      icon: Icons.access_time,
+                      iconColor: Colors.blueGrey,
+                      isSelected: false,
+                    ),
+                  ),
+                ],
+              ),
 
-                    sectionTile(
+              const SizedBox(height: 20),
+
+              // list
+               Expanded(
+                child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return sectionTile(
+                        icon: Icons.checklist_rtl,
+                        color: const Color(0xFF7BCFA6),
+                        title: "Tipo de Tareas",
+                        subtitle: "Tareas creadas",
+                        items: provider.tasks.map((t) => t.title).toList(),
+                        onAdd: _openAddTaskDialog,
+                      );
+                    }
+
+                    if (index == 1) {
+                      return sectionTile(
+                        icon: Icons.auto_awesome_mosaic,
+                        color: const Color(0xFFA7A6F2),
+                        title: "Grupo de Tareas",
+                        subtitle: "Lista de grupos",
+                        items: ["Grupo 1", "Grupo 2", "Grupo 3"],
+                      );
+                    }
+
+                    return sectionTile(
                       icon: Icons.contact_support,
-                      color: Colors.amber,
+                      color: const Color(0xFFF2C36B),
                       title: "Guía de Ayuda",
                       subtitle: "Pasos de ayuda",
                       items: ["Paso 1", "Paso 2", "Paso 3"],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Stat extends StatelessWidget {
+  final String label;
+  final int value;
+  final IconData icon;
+  final Color iconColor;
+  final bool isSelected;
+
+  const _Stat(
+    this.label,
+    this.value, {
+    required this.icon,
+    required this.iconColor,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected
+              ? iconColor
+              : iconColor.withValues(alpha: 0.3),
+          width: isSelected ? 2.5 : 1.5,
+        ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // TEXTO IZQUIERDA
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF4A5568),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "$value",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1D2A3A),
+                ),
+              ),
+            ],
+          ),
+
+          // ICONO DERECHA
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: 32),
+          ),
+        ],
       ),
     );
   }
