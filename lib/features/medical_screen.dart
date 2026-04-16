@@ -1,3 +1,4 @@
+import 'package:emm_app/core/session/session_actions.dart';
 import 'package:flutter/material.dart';
 
 class MedicalScreen extends StatelessWidget {
@@ -7,7 +8,19 @@ class MedicalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Medical')),
+      appBar: AppBar(
+        title: const Text('Medical'),
+        actions: [
+          IconButton(
+            tooltip: 'Cerrar sesion',
+            onPressed: () => SessionActions.logout(
+              context,
+              message: 'Sesion cerrada',
+            ),
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: const Center(
         child: Text('Pantalla del medico'),
       ),

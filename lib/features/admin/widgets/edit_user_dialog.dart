@@ -26,11 +26,14 @@ class _EditUserDialogState extends State<EditUserDialog> {
   final birthdate = TextEditingController();
   final grade = TextEditingController();
   final lastVisit = TextEditingController();
+  final title = TextEditingController();
+  final department = TextEditingController();
 
   Medical? selectedMedical;
   List<Carer> selectedCarers = [];
   String gender = 'UNKNOWN';
   String role = '';
+  bool professional = false;
 
   bool _loading = true;
   String? _error;
@@ -60,6 +63,15 @@ class _EditUserDialogState extends State<EditUserDialog> {
         selectedMedical = user.medical;
         selectedCarers = List.from(user.carers ?? []);
       }
+
+      if (user is Medical) {
+        title.text = user.title ?? '';
+        department.text = user.department ?? '';
+      }
+
+      if (user is Carer) {
+        professional = user.professional;
+      }
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
@@ -76,10 +88,10 @@ class _EditUserDialogState extends State<EditUserDialog> {
     birthdate.dispose();
     grade.dispose();
     lastVisit.dispose();
+    title.dispose();
+    department.dispose();
     super.dispose();
   }
-
-  bool get isPatient => role == 'PATIENT';
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +175,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
           ],
           decoration: const InputDecoration(labelText: "Género"),
         ),
-        if (isPatient) ...[
+        if (role == "PATIENT") ...[
           const SizedBox(height: 25),
           TextField(
             controller: birthdate,
@@ -254,6 +266,35 @@ class _EditUserDialogState extends State<EditUserDialog> {
             ),
           ),
         ],
+        if (role == "MEDICAL") ... [
+          const SizedBox(height: 25),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: title,
+                  decoration: const InputDecoration(labelText: "Titulo"),
+                ),
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: TextField(
+                  controller: department,
+                  decoration: const InputDecoration(labelText: "Departamento"),
+                ),
+              ),
+            ],
+          ),
+        ],
+        if (role == "CARER") ...[
+          const SizedBox(height: 25),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text("Cuidador profesional"),
+            value: professional,
+            onChanged: (value) => setState(() => professional = value),
+          ),
+        ],
       ],
     );
   }
@@ -267,12 +308,19 @@ class _EditUserDialogState extends State<EditUserDialog> {
         "email": email.text.isEmpty ? null : email.text,
         "phone": phone.text.isEmpty ? null : phone.text,
         "gender": gender,
-        if (isPatient) ...{
+        if (role == "PATIENT") ...{
           "birthdate": birthdate.text,
           "grade": grade.text.isEmpty ? null : grade.text,
           "lastVisit": lastVisit.text.isEmpty ? null : lastVisit.text,
           "medical": selectedMedical?.toJson(),
           "carers": selectedCarers.map((c) => c.toJson()).toList(),
+        },
+        if (role == "MEDICAL") ...{
+          "title": title.text.isEmpty ? null : title.text,
+          "department": department.text.isEmpty ? null : department.text,
+        },
+        if (role == "CARER") ...{
+          "professional": professional,
         },
       });
       if (!context.mounted) return;

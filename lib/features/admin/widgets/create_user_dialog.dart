@@ -23,11 +23,34 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
   final phone = TextEditingController();
   final grade = TextEditingController();
   final lastVisit = TextEditingController();
+  final title = TextEditingController();
+  final department = TextEditingController();
 
   Medical? selectedMedical;
   List<Carer> selectedCarers = [];
   String gender = "UNKNOWN";
   String role = "MEDICAL";
+  bool professional = false;
+
+  void _onRoleChanged(String newRole) {
+    if (role == newRole) return;
+
+    setState(() {
+      role = newRole;
+
+      // Limpia campos dependientes del rol para no arrastrar datos.
+      birthdate.clear();
+      grade.clear();
+      lastVisit.clear();
+      selectedMedical = null;
+      selectedCarers = [];
+
+      title.clear();
+      department.clear();
+
+      professional = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +144,9 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       initialValue: role,
-                      onChanged: (v) => setState(() => role = v!),
+                      onChanged: (v) {
+                        if (v != null) _onRoleChanged(v);
+                      },
                       items: const [
                         DropdownMenuItem(
                           value: "MEDICAL",
@@ -231,19 +256,6 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                     ),
                   ),
                 ),
-                /**DropdownButtonFormField<Medical>(
-                  initialValue: selectedMedical,
-                  items: context
-                      .read<AdminProvider>()
-                      .medicals
-                      .map((m) => DropdownMenuItem(
-                    value: m,
-                    child: Text(m.name ?? m.username),
-                  ))
-                      .toList(),
-                  onChanged: (v) => setState(() => selectedMedical = v),
-                  decoration: const InputDecoration(labelText: "Médico"),
-                ),*/
 
                 const SizedBox(height: 20),
 
@@ -275,30 +287,36 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                     ),
                   ),
                 ),
-                /**Wrap(
-                  spacing: 8,
-                  children: context
-                      .read<AdminProvider>()
-                      .carers
-                      .map((c) {
-                    final selected = selectedCarers.contains(c);
-
-                    return FilterChip(
-                      label: Text(c.name ?? c.username),
-                      selected: selected,
-                      onSelected: (v) {
-                        setState(() {
-                          if (v) {
-                            selectedCarers.add(c);
-                          } else {
-                            selectedCarers.remove(c);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),*/
-              ]
+              ],
+              if (role == "MEDICAL") ... [
+                const SizedBox(height: 25),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: title,
+                        decoration: const InputDecoration(labelText: "Título"),
+                      ),
+                    ),
+                    const SizedBox(width: 50),
+                    Expanded(
+                      child: TextField(
+                        controller: department,
+                        decoration: const InputDecoration(labelText: "Departamento"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (role == "CARER") ... [
+                const SizedBox(height: 25),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text("Cuidador profesional"),
+                  value: professional,
+                  onChanged: (value) => setState(() => professional = value),
+                ),
+              ],
             ],
           ),
         ),
@@ -346,6 +364,13 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                   "lastVisit": lastVisit.text.isEmpty ? null : lastVisit.text,
                   "medical": selectedMedical?.toJson(),
                   "carers": selectedCarers.map((c) => c.toJson()).toList(),
+                },
+                if (role == "MEDICAL") ...{
+                  "title": title.text.isEmpty ? null : title.text,
+                  "department": department.text.isEmpty ? null : department.text,
+                },
+                if (role == "CARER") ...{
+                  "professional": professional,
                 }
               });
 

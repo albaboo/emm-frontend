@@ -66,4 +66,10 @@ class Patient extends User {
 
   }
 
+  @override
+  bool operator ==(Object other) => other is Patient && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
 }

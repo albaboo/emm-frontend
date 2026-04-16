@@ -41,4 +41,10 @@ class Admin extends User {
       "type": type.value,
     };
   }
+
+  @override
+  bool operator ==(Object other) => other is Admin && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
