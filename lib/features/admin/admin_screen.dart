@@ -1,7 +1,9 @@
+import 'package:emm_app/features/admin/widgets/edit_user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/enums/user_types.dart';
+import '../../core/session/session_actions.dart';
 import '../../providers/admin_provider.dart';
 import 'widgets/create_user_dialog.dart';
 
@@ -45,19 +47,13 @@ class _AdminScreenState extends State<AdminScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Text(
-              "Panel Hospital",
-              style: TextStyle(fontSize: 25),
-            ),
-            Text(
-              "Gestión de usuarios",
-              style: TextStyle(fontSize: 16),
-            ),
+            Text("Panel Hospital", style: TextStyle(fontSize: 25)),
+            Text("Gestión de usuarios", style: TextStyle(fontSize: 16)),
           ],
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.only(left: 40),
             child: Center(
               child: InkWell(
                 borderRadius: BorderRadius.circular(30),
@@ -98,198 +94,209 @@ class _AdminScreenState extends State<AdminScreen> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Center(
+                child: IconButton(
+                  tooltip: 'Cerrar sesion',
+                  onPressed: () =>
+                      SessionActions.logout(
+                        context,
+                        message: 'Sesion cerrada',
+                      ),
+                  icon: const Icon(Icons.logout),
+                ),
+            ),
+          ),
         ],
       ),
 
       body: provider.loading
           ? const Center(child: CircularProgressIndicator())
           : Column(
-              children: [
-                const SizedBox(height: 20),
+        children: [
+          const SizedBox(height: 20),
 
-                // STATS
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            setState(() {
-                              selectedFilter = UserType.patient;
-                            });
-                          },
-                          child: _Stat(
-                            "Pacientes",
-                            provider.patients.length,
-                            icon: Icons.favorite_outline,
-                            iconColor: Colors.purple,
-                            isSelected: selectedFilter == UserType.patient,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            setState(() {
-                              selectedFilter = UserType.carer;
-                            });
-                          },
-                          child: _Stat(
-                            "Cuidadores",
-                            provider.carers.length,
-                            icon: Icons.diversity_1,
-                            iconColor: Colors.green,
-                            isSelected: selectedFilter == UserType.carer,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            setState(() {
-                              selectedFilter = UserType.medical;
-                            });
-                          },
-                          child: _Stat(
-                            "Médicos",
-                            provider.medicals.length,
-                            icon: Icons.medical_services,
-                            iconColor: const Color.fromARGB(255, 176, 39, 48),
-                            isSelected: selectedFilter == UserType.medical,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            setState(() {
-                              selectedFilter = null;
-                            });
-                          },
-                          child: _Stat(
-                            "Todos",
-                            provider.users.length,
-                            icon: Icons.people,
-                            iconColor: Colors.blueGrey,
-                            isSelected: selectedFilter == null,
-                          ),
-                        ),
-                      ),
-                    ],
+          // STATS
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 100),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      setState(() {
+                        selectedFilter = UserType.patient;
+                      });
+                    },
+                    child: _Stat(
+                      "Pacientes",
+                      provider.patients.length,
+                      icon: Icons.favorite_outline,
+                      iconColor: Colors.purple,
+                      isSelected: selectedFilter == UserType.patient,
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 20),
-
-                // LISTA
+                const SizedBox(width: 20),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 100),
-                    child: ListView.builder(
-                      itemCount: filteredUsers.length,
-                      itemBuilder: (context, index) {
-                        final u = filteredUsers[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            padding: const EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                              color: _backgroundColor(u.type.value),
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(
-                                color: _borderColor(u.type.value),
-                                width: 2,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                // ICONO
-                                Container(
-                                  width: 70,
-                                  height: 70,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    _icon(u.type.value),
-                                    size: 35,
-                                    color: _iconColor(u.type.value),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 16),
-
-                                // INFO
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${u.name ?? ''} ${u.lastnames ?? ''}',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF1D2A3A),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        u.email ?? u.phone ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xFF4A5568),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                // INDICADOR DE ROL
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    u.type.value.toUpperCase(),
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      setState(() {
+                        selectedFilter = UserType.carer;
+                      });
+                    },
+                    child: _Stat(
+                      "Cuidadores",
+                      provider.carers.length,
+                      icon: Icons.diversity_1,
+                      iconColor: Colors.green,
+                      isSelected: selectedFilter == UserType.carer,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      setState(() {
+                        selectedFilter = UserType.medical;
+                      });
+                    },
+                    child: _Stat(
+                      "Médicos",
+                      provider.medicals.length,
+                      icon: Icons.medical_services,
+                      iconColor: const Color.fromARGB(255, 176, 39, 48),
+                      isSelected: selectedFilter == UserType.medical,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      setState(() {
+                        selectedFilter = null;
+                      });
+                    },
+                    child: _Stat(
+                      "Todos",
+                      provider.users.length,
+                      icon: Icons.people,
+                      iconColor: Colors.blueGrey,
+                      isSelected: selectedFilter == null,
                     ),
                   ),
                 ),
               ],
             ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // LISTA
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 100),
+              child: ListView.builder(
+                itemCount: filteredUsers.length,
+                itemBuilder: (context, index) {
+                  final u = filteredUsers[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        color: _backgroundColor(u.type.value),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: _borderColor(u.type.value),
+                          width: 2,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          // ICONO
+                          Container(
+                            width: 70,
+                            height: 70,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _icon(u.type.value),
+                              size: 35,
+                              color: _iconColor(u.type.value),
+                            ),
+                          ),
+
+                          const SizedBox(width: 16),
+
+                          // INFO
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${u.name ?? ''} ${u.lastnames ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF1D2A3A),
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  u.email ?? u.phone ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF4A5568),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit_outlined,
+                              color: Colors.blueGrey,
+                              size: 32,
+                            ),
+                            tooltip: "Editar",
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+
+                                builder: (_) =>
+                                    EditUserDialog(userId: u.id),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -353,13 +360,12 @@ class _Stat extends StatelessWidget {
   final Color iconColor;
   final bool isSelected;
 
-  const _Stat(
-    this.label,
-    this.value, {
-    required this.icon,
-    required this.iconColor,
-    required this.isSelected,
-  });
+  const _Stat(this.label,
+      this.value, {
+        required this.icon,
+        required this.iconColor,
+        required this.isSelected,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -369,9 +375,7 @@ class _Stat extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isSelected
-              ? iconColor
-              : iconColor.withValues(alpha: 0.3),
+          color: isSelected ? iconColor : iconColor.withValues(alpha: 0.3),
           width: isSelected ? 2.5 : 1.5,
         ),
         boxShadow: const [

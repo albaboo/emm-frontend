@@ -12,4 +12,39 @@ class Admin extends User {
     super.gender,
     super.hospital,
   });
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "username": username,
+      "name": name,
+      "lastnames": lastnames,
+      "email": email,
+      "phone": phone,
+      "gender": gender?.name,
+      "type": type.value,
+      "hospital": hospital?.toJsonBase(),
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJsonBase() {
+    return {
+      "id": id,
+      "username": username,
+      "name": name,
+      "lastnames": lastnames,
+      "email": email,
+      "phone": phone,
+      "gender": gender?.name,
+      "type": type.value,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) => other is Admin && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

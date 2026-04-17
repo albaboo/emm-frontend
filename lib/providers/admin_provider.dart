@@ -1,6 +1,10 @@
+import 'package:emm_app/models/patient_model.dart';
 import 'package:flutter/material.dart';
-import '../services/admin_service.dart';
+
+import '../models/carer_model.dart';
+import '../models/medical_model.dart';
 import '../models/user_model.dart';
+import '../services/admin_service.dart';
 
 class AdminProvider extends ChangeNotifier {
   final AdminService adminService;
@@ -20,6 +24,10 @@ class AdminProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<User> getUser(int id) async {
+    return await adminService.get(id);
+  }
+
   Future<void> createUser(Map<String, dynamic> body) async {
     final newUser = await adminService.add(body);
 
@@ -28,12 +36,22 @@ class AdminProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<User> get medicals =>
-      users.where((u) => u.type.value == 'MEDICAL').toList();
+  Future<void> updateUser(int id, Map<String, dynamic> body) async {
+    final updated = await adminService.update(id, body);
 
-  List<User> get patients =>
-      users.where((u) => u.type.value == 'PATIENT').toList();
+    final index = users.indexWhere((u) => u.id == id);
+    if (index != -1) users[index] = updated;
 
-  List<User> get carers =>
-      users.where((u) => u.type.value == 'CARER').toList();
+    await loadUsers();
+    notifyListeners();
+  }
+
+  List<Medical> get medicals =>
+      users.where((u) => u.type.value == 'MEDICAL').toList().cast<Medical>();
+
+  List<Patient> get patients =>
+      users.where((u) => u.type.value == 'PATIENT').toList().cast<Patient>();
+
+  List<Carer> get carers =>
+      users.where((u) => u.type.value == 'CARER').toList().cast<Carer>();
 }

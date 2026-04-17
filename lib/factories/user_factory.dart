@@ -1,3 +1,4 @@
+import '../core/enums/gender.dart';
 import '../core/enums/user_types.dart';
 import '../models/admin_model.dart';
 import '../models/carer_model.dart';
@@ -20,7 +21,7 @@ class UserFactory {
           lastnames: json['lastnames'],
           email: json['email'],
           phone: json['phone'],
-          gender: json['gender'],
+          gender: Gender.fromString(json['gender'] ?? 'UNKNOWN'),
           hospital: _parseHospital(json['hospital']),
           birthdate: json['birthdate'] != null
               ? DateTime.tryParse(json['birthdate'])
@@ -48,7 +49,7 @@ class UserFactory {
           lastnames: json['lastnames'],
           email: json['email'],
           phone: json['phone'],
-          gender: json['gender'],
+          gender: Gender.fromString(json['gender'] ?? 'UNKNOWN'),
           hospital: _parseHospital(json['hospital']),
           title: json['title'],
           department: json['department'],
@@ -67,7 +68,7 @@ class UserFactory {
           lastnames: json['lastnames'],
           email: json['email'],
           phone: json['phone'],
-          gender: json['gender'],
+          gender: Gender.fromString(json['gender'] ?? 'UNKNOWN'),
           hospital: _parseHospital(json['hospital']),
           professional: json['professional'] ?? false,
 
@@ -85,7 +86,7 @@ class UserFactory {
           lastnames: json['lastnames'],
           email: json['email'],
           phone: json['phone'],
-          gender: json['gender'],
+          gender: Gender.fromString(json['gender'] ?? 'UNKNOWN'),
           hospital: _parseHospital(json['hospital']),
         );
     }

@@ -26,4 +26,50 @@ class Patient extends User {
     this.medical,
     this.carers,
   });
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "username": username,
+      "name": name,
+      "lastnames": lastnames,
+      "email": email,
+      "phone": phone,
+      "gender": gender?.name,
+      "type": type.value,
+      "hospital": hospital?.toJsonBase(),
+      "birthdate": birthdate?.toIso8601String(),
+      "lastVisit": lastVisit?.toIso8601String(),
+      "grade": grade,
+      "medical": medical?.toJsonBase(),
+      "carers": carers?.map((c) => c.toJsonBase()).toList(),
+    };
+
+  }
+
+  @override
+  Map<String, dynamic> toJsonBase() {
+    return {
+      "id": id,
+      "username": username,
+      "name": name,
+      "lastnames": lastnames,
+      "email": email,
+      "phone": phone,
+      "gender": gender?.name,
+      "type": type.value,
+      "birthdate": birthdate?.toIso8601String(),
+      "lastVisit": lastVisit?.toIso8601String(),
+      "grade": grade,
+    };
+
+  }
+
+  @override
+  bool operator ==(Object other) => other is Patient && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
 }
