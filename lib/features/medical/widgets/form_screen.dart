@@ -146,6 +146,40 @@ class _FormScreenState extends State<FormScreen> {
     );
   }
 
+                    void _openAddGroupDialog() {
+                    final TextEditingController _groupController = TextEditingController();
+
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Añadir grupo"),
+                          content: TextField(
+                            controller: _groupController,
+                            decoration: const InputDecoration(
+                              labelText: "Nombre del grupo",
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("Cancelar"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Aquí llamas a tu provider de grupos
+                                print(_groupController.text);
+
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Añadir"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TypeTaskProvider>();
@@ -241,7 +275,8 @@ class _FormScreenState extends State<FormScreen> {
                         color: const Color(0xFFA7A6F2),
                         title: "Grupo de Tareas",
                         subtitle: "Lista de grupos",
-                        items: ["Grupo 1", "Grupo 2", "Grupo 3"],
+                        items: provider.tasks.map((t) => t.title).toList(),
+                        onAdd: _openAddGroupDialog,
                       );
                     }
 
