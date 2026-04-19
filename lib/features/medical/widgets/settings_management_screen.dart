@@ -18,7 +18,7 @@ class _SettingsManagementScreenState extends State<SettingsManagementScreen> {
 
   static const double _mobileBreakpoint = 760;
 
-  IconData _selectedIcon = Icons.task;
+  int _selectedIconIndex = 0; // Índice del icono seleccionado
   Color _selectedColor = Colors.blue;
 
   final List<Color> _colors = [
@@ -30,17 +30,6 @@ class _SettingsManagementScreenState extends State<SettingsManagementScreen> {
     const Color(0xFF74562A),
   ];
 
-  final List<IconData> _icons = [
-    Icons.task,
-    Icons.medication_liquid,
-    Icons.home,
-    Icons.phone,
-    Icons.menu_book,
-    Icons.coffee,
-    Icons.bathtub,
-    Icons.restaurant_menu,
-    Icons.live_tv,
-  ];
 
   @override
   void initState() {
@@ -91,45 +80,47 @@ class _SettingsManagementScreenState extends State<SettingsManagementScreen> {
                           color: Color(0xFF4A5568),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _icons.map((icon) {
-                          final selected = _selectedIcon == icon;
+                       const SizedBox(height: 10),
+                       Wrap(
+                         spacing: 8,
+                         runSpacing: 8,
+                         children: TypeTask.availableIcons.entries.map((entry) {
+                           final index = entry.key;
+                           final icon = entry.value;
+                           final selected = _selectedIconIndex == index;
 
-                          return GestureDetector(
-                            onTap: () {
-                              setStateDialog(() => _selectedIcon = icon);
-                            },
-                            child: Container(
-                              width: 48,
-                              height: 48,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: selected
-                                    ? Colors.grey.shade300
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: selected
-                                      ? Colors.blueGrey
-                                      : Colors.black12,
-                                  width: selected ? 2 : 1,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 6,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Icon(icon, size: 22),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                           return GestureDetector(
+                             onTap: () {
+                               setStateDialog(() => _selectedIconIndex = index);
+                             },
+                             child: Container(
+                               width: 48,
+                               height: 48,
+                               alignment: Alignment.center,
+                               decoration: BoxDecoration(
+                                 color: selected
+                                     ? Colors.grey.shade300
+                                     : Colors.white,
+                                 borderRadius: BorderRadius.circular(14),
+                                 border: Border.all(
+                                   color: selected
+                                       ? Colors.blueGrey
+                                       : Colors.black12,
+                                   width: selected ? 2 : 1,
+                                 ),
+                                 boxShadow: const [
+                                   BoxShadow(
+                                     color: Colors.black12,
+                                     blurRadius: 6,
+                                     offset: Offset(0, 3),
+                                   ),
+                                 ],
+                               ),
+                               child: Icon(icon, size: 22),
+                             ),
+                           );
+                         }).toList(),
+                       ),
                       const SizedBox(height: 24),
                       const Text(
                         "Color",
@@ -189,7 +180,7 @@ class _SettingsManagementScreenState extends State<SettingsManagementScreen> {
 
                     final task = TypeTask(
                       title: _taskController.text,
-                      icon: _selectedIcon.codePoint,
+                      icon: _selectedIconIndex,
                       color: _selectedColor.toARGB32(),
                     );
 
