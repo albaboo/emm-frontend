@@ -11,7 +11,7 @@ import '../../services/auth_service.dart';
 import '../../services/storage_service.dart';
 import '../admin/admin_screen.dart';
 import '../carer_screen.dart';
-import '../medical_screen.dart';
+import '../medical/medical_screen.dart';
 import '../patient_screen.dart';
 
 class LoginScreen extends StatefulWidget {
