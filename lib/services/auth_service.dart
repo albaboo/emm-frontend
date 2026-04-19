@@ -21,9 +21,20 @@ class AuthService {
     } on DioException catch (e) {
       final data = e.response?.data;
 
-      throw Exception(
-        data?['message'] ?? data?['errors'] ?? 'Inicio de sesión fallido',
-      );
+      print('STATUS: ${e.response?.statusCode}');
+      print('DATA: $data');
+      print("RESPONSE: ${e}");
+
+      String message = 'Inicio de sesión fallido';
+
+      if (data is Map<String, dynamic>) {
+        message = data['message'] ??
+            data['error'] ??
+            data['errors']?.toString() ??
+            message;
+      }
+
+      throw Exception(message);
     }
   }
 }
