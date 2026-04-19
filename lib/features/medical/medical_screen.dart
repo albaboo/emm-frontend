@@ -87,7 +87,6 @@ class _MedicalScreenState extends State<MedicalScreen> {
                           ),
                           child: _Stat(
                             "Configuración",
-                            3,
                             icon: Icons.settings,
                             iconColor: Colors.blueGrey,
                             isSelected:
@@ -105,7 +104,6 @@ class _MedicalScreenState extends State<MedicalScreen> {
                           ),
                           child: _Stat(
                             "Pacientes",
-                            patients.length,
                             icon: Icons.favorite_border,
                             iconColor: Colors.purple,
                             isSelected:
@@ -122,7 +120,6 @@ class _MedicalScreenState extends State<MedicalScreen> {
                           ),
                           child: _Stat(
                             "Cuidadores",
-                            carers.length,
                             icon: Icons.diversity_1,
                             iconColor: Colors.green,
                             isSelected:
@@ -203,14 +200,12 @@ class _MedicalScreenState extends State<MedicalScreen> {
 
 class _Stat extends StatelessWidget {
   final String label;
-  final int value;
   final IconData icon;
   final Color iconColor;
   final bool isSelected;
 
   const _Stat(
-    this.label,
-    this.value, {
+    this.label, {
     required this.icon,
     required this.iconColor,
     required this.isSelected,
@@ -246,15 +241,6 @@ class _Stat extends StatelessWidget {
                   fontSize: isNarrow ? 13 : 14,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF4A5568),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                "$value",
-                style: TextStyle(
-                  fontSize: isNarrow ? 20 : 22,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1D2A3A),
                 ),
               ),
             ],
