@@ -94,7 +94,7 @@ Widget sectionTile({
 }
 
 Widget taskItem(TypeTask task) {
-  final color = task.color;
+  final color = task.colorValue;
   final borderColor = Color.alphaBlend(
     Colors.black.withValues(alpha: 0.15),
     color,
@@ -121,7 +121,7 @@ Widget taskItem(TypeTask task) {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            task.icon,
+            task.iconData,
             size: 28,
             color: Colors.blueGrey,
           ),

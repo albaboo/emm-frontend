@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 class TypeTask {
   final int? id;
   final String title;
-  final IconData icon;
-  final Color color;
+  final int icon;
+  final int color;
 
   TypeTask({
     this.id,
@@ -17,19 +17,20 @@ class TypeTask {
     return TypeTask(
       id: json['id'],
       title: json['title'],
-      icon: IconData(
-        json['icon'],
-        fontFamily: 'MaterialIcons',
-      ),
-      color: Color(json['color']),
+      icon: json['icon'],
+      color: json['color'],
     );
   }
+
+  IconData get iconData => IconData(icon, fontFamily: 'MaterialIcons');
+
+  Color get colorValue => Color(color);
 
   Map<String, dynamic> toJson() {
     return {
       "title": title,
-      "icon": icon.codePoint,
-      "color": color.toARGB32(),
+      "icon": icon,
+      "color": color,
     };
   }
 }

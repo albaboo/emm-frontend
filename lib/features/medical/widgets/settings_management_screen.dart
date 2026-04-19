@@ -189,8 +189,8 @@ class _SettingsManagementScreenState extends State<SettingsManagementScreen> {
 
                     final task = TypeTask(
                       title: _taskController.text,
-                      icon: _selectedIcon,
-                      color: _selectedColor,
+                      icon: _selectedIcon.codePoint,
+                      color: _selectedColor.toARGB32(),
                     );
 
                     await context.read<TypeTaskProvider>().createTask(
