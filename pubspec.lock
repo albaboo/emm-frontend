@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: dropdown_search
-      sha256: "55106e8290acaa97ed15bea1fdad82c3cf0c248dd410e651f5a8ac6870f783ab"
+      sha256: f9414cca28d6414fdc1250f78a052bcb7ddb596f5a1affbca8e79737a979a60a
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.6"
+    version: "7.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -328,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+  rename_app:
+    dependency: "direct main"
+    description:
+      name: rename_app
+      sha256: "387a88335f853674b39bed7943955388bbaf6aae4ffdc812e2ef275ce119abc7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.5"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -457,10 +465,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
+      sha256: "046d3928e16fa4dc46e8350415661755ab759d9fc97fc21b5ab295f71e4f0499"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.2"
+    version: "15.1.0"
   web:
     dependency: transitive
     description:

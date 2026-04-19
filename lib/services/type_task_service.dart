@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../core/network/dio_client.dart';
-import '../models/typetask_model.dart';
+import '../models/type_task_model.dart';
 
 class TypeTaskService {
   final Dio dio = DioClient.dio;
