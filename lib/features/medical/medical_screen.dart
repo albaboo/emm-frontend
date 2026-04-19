@@ -177,10 +177,31 @@ class _MedicalScreenState extends State<MedicalScreen> {
     }
   }
 
+  String _hospitalName(BuildContext context) {
+    final rawName = context.watch<UserProvider>().user?.hospital?.name;
+    final name = rawName?.trim();
+    return (name == null || name.isEmpty) ? 'Sin hospital' : name;
+  }
+
   AppBar _buildAppBar(BuildContext context) {
+    final hospitalName = _hospitalName(context);
+
     return AppBar(
       toolbarHeight: 80,
-      title: const Text("Panel Profesional", style: TextStyle(fontSize: 25)),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Panel Profesional", style: TextStyle(fontSize: 25)),
+          const SizedBox(height: 2),
+          Text(
+            hospitalName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

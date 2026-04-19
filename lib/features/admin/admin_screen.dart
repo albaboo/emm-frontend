@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/enums/user_types.dart';
 import '../../core/session/session_actions.dart';
 import '../../providers/admin_provider.dart';
+import '../../providers/user_provider.dart';
 import 'widgets/create_user_dialog.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -33,6 +34,12 @@ class _AdminScreenState extends State<AdminScreen> {
     if (selectedFilter == null) return provider.users;
 
     return provider.users.where((u) => u.type == selectedFilter).toList();
+  }
+
+  String _hospitalName(BuildContext context) {
+    final rawName = context.watch<UserProvider>().user?.hospital?.name;
+    final name = rawName?.trim();
+    return (name == null || name.isEmpty) ? 'Sin hospital' : name;
   }
 
   @override
@@ -271,14 +278,30 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   AppBar _buildDesktopAppBar(BuildContext context) {
+    final hospitalName = _hospitalName(context);
+
     return AppBar(
       toolbarHeight: 80,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text("Panel Hospital", style: TextStyle(fontSize: 25)),
-          Text("Gestión de usuarios", style: TextStyle(fontSize: 16)),
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Panel Hospital", style: TextStyle(fontSize: 25)),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  hospitalName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          const Text("Gestión de usuarios", style: TextStyle(fontSize: 16)),
         ],
       ),
       actions: [
@@ -295,6 +318,8 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   AppBar _buildMobileAppBar(BuildContext context) {
+    final hospitalName = _hospitalName(context);
+
     return AppBar(
       toolbarHeight: 132,
       titleSpacing: 12,
@@ -302,7 +327,21 @@ class _AdminScreenState extends State<AdminScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Panel Hospital", style: TextStyle(fontSize: 22)),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Panel Hospital", style: TextStyle(fontSize: 22)),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  hospitalName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
           const Text("Gestión de usuarios", style: TextStyle(fontSize: 14)),
           const SizedBox(height: 10),
           Row(
