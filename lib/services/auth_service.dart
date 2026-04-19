@@ -23,7 +23,7 @@ class AuthService {
 
       print('STATUS: ${e.response?.statusCode}');
       print('DATA: $data');
-      print("RESPONSE: ${e}");
+      print("RESPONSE: $e");
 
       String message = 'Inicio de sesión fallido';
 

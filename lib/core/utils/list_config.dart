@@ -13,7 +13,7 @@ final color ;
 
 
   const ListConfig({
-    Key? key ,
+    super.key ,
     required this.icon,
     required this.listName,
     required this.subName,
@@ -22,7 +22,7 @@ final color ;
     
     
     
-    }) : super (key: key);
+    });
 
   @override
   Widget build(BuildContext context) {
