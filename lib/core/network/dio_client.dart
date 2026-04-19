@@ -13,7 +13,7 @@ class DioClient {
 
   static final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:80/api',
+      baseUrl: 'http://178.104.75.64:8000/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
