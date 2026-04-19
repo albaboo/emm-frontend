@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/typetask_model.dart';
-import '../services/typetask_service.dart';
+import '../models/type_task_model.dart';
+import '../services/type_task_service.dart';
 
 class TypeTaskProvider extends ChangeNotifier {
   final TypeTaskService typeTaskService;

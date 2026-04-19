@@ -190,11 +190,12 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                 // MEDICAL SELECT
                 DropdownSearch<Medical>(
                   selectedItem: selectedMedical,
-                  items: context.read<AdminProvider>().medicals,
+                  items: (filter, loadProps) =>
+                      context.read<AdminProvider>().medicals,
 
                   itemAsString: (m) => "${m.name ?? ''} ${m.lastnames ?? ''}",
 
-                  onChanged: (v) => setState(() => selectedMedical = v),
+                  onSelected: (v) => setState(() => selectedMedical = v),
 
                   popupProps: PopupProps.menu(
                     showSearchBox: true,
@@ -203,7 +204,7 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                       decoration: InputDecoration(labelText: "Buscar médico"),
                     ),
 
-                    itemBuilder: (context, item, isSelected) {
+                    itemBuilder: (context, item, isDisabled, isSelected) {
                       return ListTile(
                         title: Text(
                           "${item.name ?? ''} ${item.lastnames ?? ''}",
@@ -213,10 +214,8 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                     },
                   ),
 
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: "Médico",
-                    ),
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(labelText: "Médico"),
                   ),
                 ),
 
@@ -224,28 +223,27 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
 
                 // CARERS MULTI SELECT (simple versión)
                 DropdownSearch<Carer>.multiSelection(
-                  items: context.read<AdminProvider>().carers,
+                  items: (filter, loadProps) =>
+                      context.read<AdminProvider>().carers,
                   selectedItems: selectedCarers,
 
                   itemAsString: (c) => "${c.name ?? ''} ${c.lastnames ?? ''}",
 
-                  onChanged: (List<Carer> values) {
+                  onSelected: (List<Carer> values) {
                     setState(() {
                       selectedCarers = values;
                     });
                   },
 
-                  popupProps: PopupPropsMultiSelection.menu(
+                  popupProps: MultiSelectionPopupProps.menu(
                     showSearchBox: true,
                     searchFieldProps: const TextFieldProps(
                       decoration: InputDecoration(labelText: "Buscar cuidador"),
                     ),
                   ),
 
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: "Cuidadores",
-                    ),
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(labelText: "Cuidadores"),
                   ),
                 ),
               ],

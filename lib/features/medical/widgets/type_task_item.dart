@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/type_task_model.dart';
+
 Widget sectionTile({
   required BuildContext context,
   required IconData icon,
   required Color color,
   required String title,
   required String subtitle,
-  required List<String> items,
+  required List<TypeTask> items,
   VoidCallback? onAdd,
 }) {
   final isMobile = MediaQuery.of(context).size.width < 760;
@@ -87,18 +89,73 @@ Widget sectionTile({
       },
     ),
     subtitle: Text(subtitle, style: TextStyle(fontSize: isMobile ? 12 : 14)),
-    children: items.map((e) => taskItem(e)).toList(),
+    children: items.map(taskItem).toList(),
   );
 }
 
-Widget taskItem(String title) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(18),
-    ),
-    child: Text(title),
+Widget taskItem(TypeTask task) {
+  final color = _parseTaskColor(task.color);
+  final borderColor = Color.alphaBlend(
+    Colors.black.withValues(alpha: 0.15),
+    color,
   );
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: borderColor, width: 2),
+      boxShadow: const [
+        BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
+      ],
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 56,
+          height: 56,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            _parseTaskIcon(task.icon),
+            size: 28,
+            color: Colors.blueGrey,
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Text(
+            task.title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2A3A),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+IconData _parseTaskIcon(String rawIcon) {
+  final codePoint = int.tryParse(rawIcon);
+  if (codePoint == null) {
+    return Icons.task;
+  }
+
+  return IconData(codePoint, fontFamily: 'MaterialIcons');
+}
+
+Color _parseTaskColor(String rawColor) {
+  final value = int.tryParse(rawColor);
+  if (value == null) {
+    return const Color(0xFFE7EDF4);
+  }
+
+  return Color(value);
 }

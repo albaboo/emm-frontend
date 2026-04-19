@@ -2,14 +2,14 @@ import 'package:emm_app/core/navigation/app_navigator.dart';
 import 'package:emm_app/core/network/dio_client.dart';
 import 'package:emm_app/providers/admin_provider.dart';
 import 'package:emm_app/services/admin_service.dart';
-import 'package:emm_app/services/typetask_service.dart';
+import 'package:emm_app/services/type_task_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
 import 'features/login/user_screen.dart';
 import 'providers/user_provider.dart';
-import 'providers/typetask_provider.dart';
+import 'package:emm_app/providers/type_task_provider.dart';
 
 
 void main() {

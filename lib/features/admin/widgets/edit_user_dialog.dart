@@ -220,39 +220,38 @@ class _EditUserDialogState extends State<EditUserDialog> {
           const SizedBox(height: 20),
           DropdownSearch<Medical>(
             selectedItem: selectedMedical,
-            items: context.read<AdminProvider>().medicals,
+            items: (filter, loadProps) =>
+                context.read<AdminProvider>().medicals,
             itemAsString: (m) => "${m.name ?? ''} ${m.lastnames ?? ''}",
-            onChanged: (v) => setState(() => selectedMedical = v),
+            onSelected: (v) => setState(() => selectedMedical = v),
             popupProps: PopupProps.menu(
               showSearchBox: true,
               searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(labelText: "Buscar médico"),
               ),
-              itemBuilder: (context, item, isSelected) => ListTile(
+              itemBuilder: (context, item, isDisabled, isSelected) => ListTile(
                 title: Text("${item.name ?? ''} ${item.lastnames ?? ''}"),
                 subtitle: Text(item.username),
               ),
             ),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(labelText: "Médico"),
+            decoratorProps: const DropDownDecoratorProps(
+              decoration: InputDecoration(labelText: "Médico"),
             ),
           ),
           const SizedBox(height: 20),
           DropdownSearch<Carer>.multiSelection(
-            items: context.read<AdminProvider>().carers,
+            items: (filter, loadProps) => context.read<AdminProvider>().carers,
             selectedItems: selectedCarers,
             itemAsString: (c) => "${c.name ?? ''} ${c.lastnames ?? ''}",
-            onChanged: (values) => setState(() => selectedCarers = values),
-            popupProps: PopupPropsMultiSelection.menu(
+            onSelected: (values) => setState(() => selectedCarers = values),
+            popupProps: MultiSelectionPopupProps.menu(
               showSearchBox: true,
               searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(labelText: "Buscar cuidador"),
               ),
             ),
-            dropdownDecoratorProps: const DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
-                labelText: "Cuidadores",
-              ),
+            decoratorProps: const DropDownDecoratorProps(
+              decoration: InputDecoration(labelText: "Cuidadores"),
             ),
           ),
         ],
