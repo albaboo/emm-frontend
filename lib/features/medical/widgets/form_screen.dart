@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:emm_app/core/session/session_actions.dart';
 
 import 'task_widgets.dart';
 import '../../../providers/typetask_provider.dart';
@@ -14,6 +15,9 @@ class FormScreen extends StatefulWidget {
 
 class _FormScreenState extends State<FormScreen> {
   final TextEditingController _taskController = TextEditingController();
+
+  static const double _mobileBreakpoint = 760;
+  static const double _tabletBreakpoint = 1100;
 
   IconData _selectedIcon = Icons.task;
   Color _selectedColor = Colors.blue;
@@ -149,75 +153,82 @@ class _FormScreenState extends State<FormScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TypeTaskProvider>();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < _mobileBreakpoint;
+    final isTablet =
+        screenWidth >= _mobileBreakpoint && screenWidth < _tabletBreakpoint;
+    final horizontalPadding = isMobile ? 16.0 : (isTablet ? 32.0 : 25.0);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
+      appBar: _buildAppBar(context),
 
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             children: [
-              const SizedBox(height: 25),
+              SizedBox(height: isMobile ? 12 : 20),
 
-              //  TITULO
-              const Text(
-                'Panel Profesional',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1D2A3A),
-                ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final spacing = isMobile ? 10.0 : 15.0;
+                  final cardWidth = isMobile
+                      ? constraints.maxWidth
+                      : isTablet
+                      ? (constraints.maxWidth - spacing) / 2
+                      : (constraints.maxWidth - (spacing * 3)) / 4;
+
+                  return Wrap(
+                    spacing: spacing,
+                    runSpacing: spacing,
+                    children: [
+                      SizedBox(
+                        width: cardWidth,
+                        child: _Stat(
+                          "Configuracion",
+                          provider.tasks.length,
+                          icon: Icons.settings,
+                          iconColor: Colors.lightGreen,
+                          isSelected: true,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: _Stat(
+                          "Pacientes",
+                          _icons.length,
+                          icon: Icons.account_box,
+                          iconColor: Colors.purple,
+                          isSelected: false,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: _Stat(
+                          "Alertas Activas",
+                          _colors.length,
+                          icon: Icons.add_alert,
+                          iconColor: Colors.orange,
+                          isSelected: false,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: _Stat(
+                          "Tareas Hoy",
+                          provider.tasks.length,
+                          icon: Icons.access_time,
+                          iconColor: Colors.blueGrey,
+                          isSelected: false,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
 
-              const SizedBox(height: 20),
-
-              //  STATS
-              Row(
-                children: [
-                  Expanded(
-                    child: _Stat(
-                      "Configuracion",
-                      provider.tasks.length,
-                      icon: Icons.settings,
-                      iconColor: Colors.lightGreen,
-                      isSelected: true,
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: _Stat(
-                      "Pacientes",
-                      _icons.length,
-                      icon: Icons.account_box,
-                      iconColor: Colors.purple,
-                      isSelected: false,
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: _Stat(
-                      "Alertas Activas",
-                      _colors.length,
-                      icon: Icons.add_alert,
-                      iconColor: Colors.orange,
-                      isSelected: false,
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: _Stat(
-                      "Tareas Hoy",
-                      provider.tasks.length,
-                      icon: Icons.access_time,
-                      iconColor: Colors.blueGrey,
-                      isSelected: false,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
+              SizedBox(height: isMobile ? 12 : 20),
 
               // list
               Expanded(
@@ -264,6 +275,32 @@ class _FormScreenState extends State<FormScreen> {
       ),
     );
   }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 80,
+      title: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text("Panel Profesional", style: TextStyle(fontSize: 25))],
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(child: _buildLogoutButton(context)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLogoutButton(BuildContext context) {
+    return IconButton(
+      tooltip: 'Cerrar sesion',
+      onPressed: () =>
+          SessionActions.logout(context, message: 'Sesion cerrada'),
+      icon: const Icon(Icons.logout),
+    );
+  }
 }
 
 class _Stat extends StatelessWidget {
@@ -283,8 +320,10 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNarrow = MediaQuery.of(context).size.width < 760;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isNarrow ? 14 : 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -306,19 +345,19 @@ class _Stat extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: isNarrow ? 13 : 14,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF4A5568),
+                  color: const Color(0xFF4A5568),
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 "$value",
-                style: const TextStyle(
-                  fontSize: 22,
+                style: TextStyle(
+                  fontSize: isNarrow ? 20 : 22,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1D2A3A),
+                  color: const Color(0xFF1D2A3A),
                 ),
               ),
             ],
@@ -326,10 +365,10 @@ class _Stat extends StatelessWidget {
 
           // ICONO DERECHA
           Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: Icon(icon, color: iconColor, size: 32),
+            width: isNarrow ? 36 : 42,
+            height: isNarrow ? 36 : 42,
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: isNarrow ? 28 : 32),
           ),
         ],
       ),
