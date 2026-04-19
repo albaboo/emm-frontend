@@ -126,12 +126,12 @@ class _FormScreenState extends State<FormScreen> {
                     final task = TypeTask(
                       title: _taskController.text,
                       icon: _selectedIcon.codePoint.toString(),
-                      color: _selectedColor.value.toString(),
+                      color: _selectedColor.toARGB32().toString(),
                     );
 
-                    await context
-                        .read<TypeTaskProvider>()
-                        .createTask(task.toJson());
+                    await context.read<TypeTaskProvider>().createTask(
+                      task.toJson(),
+                    );
 
                     _taskController.clear();
                     Navigator.pop(context);
@@ -220,12 +220,13 @@ class _FormScreenState extends State<FormScreen> {
               const SizedBox(height: 20),
 
               // list
-               Expanded(
+              Expanded(
                 child: ListView.builder(
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return sectionTile(
+                        context: context,
                         icon: Icons.checklist_rtl,
                         color: const Color(0xFF7BCFA6),
                         title: "Tipo de Tareas",
@@ -237,6 +238,7 @@ class _FormScreenState extends State<FormScreen> {
 
                     if (index == 1) {
                       return sectionTile(
+                        context: context,
                         icon: Icons.auto_awesome_mosaic,
                         color: const Color(0xFFA7A6F2),
                         title: "Grupo de Tareas",
@@ -246,6 +248,7 @@ class _FormScreenState extends State<FormScreen> {
                     }
 
                     return sectionTile(
+                      context: context,
                       icon: Icons.contact_support,
                       color: const Color(0xFFF2C36B),
                       title: "Guía de Ayuda",
@@ -286,9 +289,7 @@ class _Stat extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isSelected
-              ? iconColor
-              : iconColor.withValues(alpha: 0.3),
+          color: isSelected ? iconColor : iconColor.withValues(alpha: 0.3),
           width: isSelected ? 2.5 : 1.5,
         ),
         boxShadow: const [
