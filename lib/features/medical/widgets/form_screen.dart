@@ -53,6 +53,9 @@ class _FormScreenState extends State<FormScreen> {
   }
 
   void _openAddTaskDialog() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < _mobileBreakpoint;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -60,65 +63,107 @@ class _FormScreenState extends State<FormScreen> {
           builder: (context, setStateDialog) {
             return AlertDialog(
               title: const Text("Añadir tarea"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _taskController,
-                    decoration: const InputDecoration(
-                      labelText: "Título de la tarea",
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  Wrap(
-                    spacing: 8,
-                    children: _icons.map((icon) {
-                      return GestureDetector(
-                        onTap: () {
-                          setStateDialog(() => _selectedIcon = icon);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: _selectedIcon == icon
-                                ? Colors.grey.shade300
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(icon),
+              content: SizedBox(
+                width: isMobile ? screenWidth * 0.9 : 560,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: _taskController,
+                        decoration: const InputDecoration(
+                          labelText: "Título de la tarea",
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Icono",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF4A5568),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _icons.map((icon) {
+                          final selected = _selectedIcon == icon;
 
-                  const SizedBox(height: 15),
-
-                  Wrap(
-                    spacing: 10,
-                    children: _colors.map((color) {
-                      return GestureDetector(
-                        onTap: () {
-                          setStateDialog(() => _selectedColor = color);
-                        },
-                        child: Container(
-                          width: 25,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: _selectedColor == color
-                                  ? Colors.black
-                                  : Colors.transparent,
-                              width: 2,
+                          return GestureDetector(
+                            onTap: () {
+                              setStateDialog(() => _selectedIcon = icon);
+                            },
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: selected
+                                    ? Colors.grey.shade300
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: selected
+                                      ? Colors.blueGrey
+                                      : Colors.black12,
+                                  width: selected ? 2 : 1,
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(icon, size: 22),
                             ),
-                          ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Color",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF4A5568),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: _colors.map((color) {
+                          final selected = _selectedColor == color;
+
+                          return GestureDetector(
+                            onTap: () {
+                              setStateDialog(() => _selectedColor = color);
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: selected
+                                      ? Colors.black
+                                      : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
               actions: [
                 TextButton(
@@ -127,6 +172,15 @@ class _FormScreenState extends State<FormScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    if (_taskController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("El título de la tarea es obligatorio"),
+                        ),
+                      );
+                      return;
+                    }
+
                     final task = TypeTask(
                       title: _taskController.text,
                       icon: _selectedIcon.codePoint.toString(),
@@ -137,6 +191,7 @@ class _FormScreenState extends State<FormScreen> {
                       task.toJson(),
                     );
 
+                    if (!context.mounted) return;
                     _taskController.clear();
                     Navigator.pop(context);
                   },
