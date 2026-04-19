@@ -94,7 +94,7 @@ Widget sectionTile({
 }
 
 Widget taskItem(TypeTask task) {
-  final color = _parseTaskColor(task.color);
+  final color = task.color;
   final borderColor = Color.alphaBlend(
     Colors.black.withValues(alpha: 0.15),
     color,
@@ -121,7 +121,7 @@ Widget taskItem(TypeTask task) {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            _parseTaskIcon(task.icon),
+            task.icon,
             size: 28,
             color: Colors.blueGrey,
           ),
@@ -140,22 +140,4 @@ Widget taskItem(TypeTask task) {
       ],
     ),
   );
-}
-
-IconData _parseTaskIcon(String rawIcon) {
-  final codePoint = int.tryParse(rawIcon);
-  if (codePoint == null) {
-    return Icons.task;
-  }
-
-  return IconData(codePoint, fontFamily: 'MaterialIcons');
-}
-
-Color _parseTaskColor(String rawColor) {
-  final value = int.tryParse(rawColor);
-  if (value == null) {
-    return const Color(0xFFE7EDF4);
-  }
-
-  return Color(value);
 }
