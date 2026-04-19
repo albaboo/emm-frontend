@@ -95,10 +95,12 @@ class _EditUserDialogState extends State<EditUserDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 760;
+
     return AlertDialog(
       title: const Text("Editar Usuario"),
       content: SizedBox(
-        width: 600,
+        width: isMobile ? MediaQuery.of(context).size.width * 0.9 : 600,
         child: _loading
             ? const SizedBox(
                 height: 200,
@@ -106,7 +108,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
               )
             : _error != null
             ? SizedBox(height: 200, child: Center(child: Text(_error!)))
-            : SingleChildScrollView(child: _buildForm(context)),
+            : SingleChildScrollView(child: _buildForm(context, isMobile)),
       ),
       actions: _loading || _error != null
           ? [
@@ -125,44 +127,32 @@ class _EditUserDialogState extends State<EditUserDialog> {
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, bool isMobile) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: name,
-                decoration: const InputDecoration(labelText: "Nombre"),
-              ),
-            ),
-            const SizedBox(width: 50),
-            Expanded(
-              child: TextField(
-                controller: lastnames,
-                decoration: const InputDecoration(labelText: "Apellidos"),
-              ),
-            ),
-          ],
+        _responsiveTwoFields(
+          isMobile: isMobile,
+          first: TextField(
+            controller: name,
+            decoration: const InputDecoration(labelText: "Nombre"),
+          ),
+          second: TextField(
+            controller: lastnames,
+            decoration: const InputDecoration(labelText: "Apellidos"),
+          ),
         ),
         const SizedBox(height: 30),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: email,
-                decoration: const InputDecoration(labelText: "Email"),
-              ),
-            ),
-            const SizedBox(width: 50),
-            Expanded(
-              child: TextField(
-                controller: phone,
-                decoration: const InputDecoration(labelText: "Teléfono"),
-              ),
-            ),
-          ],
+        _responsiveTwoFields(
+          isMobile: isMobile,
+          first: TextField(
+            controller: email,
+            decoration: const InputDecoration(labelText: "Email"),
+          ),
+          second: TextField(
+            controller: phone,
+            decoration: const InputDecoration(labelText: "Teléfono"),
+          ),
         ),
         const SizedBox(height: 30),
         DropdownButtonFormField<String>(
@@ -266,24 +256,18 @@ class _EditUserDialogState extends State<EditUserDialog> {
             ),
           ),
         ],
-        if (role == "MEDICAL") ... [
+        if (role == "MEDICAL") ...[
           const SizedBox(height: 25),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: title,
-                  decoration: const InputDecoration(labelText: "Titulo"),
-                ),
-              ),
-              const SizedBox(width: 50),
-              Expanded(
-                child: TextField(
-                  controller: department,
-                  decoration: const InputDecoration(labelText: "Departamento"),
-                ),
-              ),
-            ],
+          _responsiveTwoFields(
+            isMobile: isMobile,
+            first: TextField(
+              controller: title,
+              decoration: const InputDecoration(labelText: "Titulo"),
+            ),
+            second: TextField(
+              controller: department,
+              decoration: const InputDecoration(labelText: "Departamento"),
+            ),
           ),
         ],
         if (role == "CARER") ...[
@@ -295,6 +279,24 @@ class _EditUserDialogState extends State<EditUserDialog> {
             onChanged: (value) => setState(() => professional = value),
           ),
         ],
+      ],
+    );
+  }
+
+  Widget _responsiveTwoFields({
+    required bool isMobile,
+    required Widget first,
+    required Widget second,
+  }) {
+    if (isMobile) {
+      return Column(children: [first, const SizedBox(height: 16), second]);
+    }
+
+    return Row(
+      children: [
+        Expanded(child: first),
+        const SizedBox(width: 50),
+        Expanded(child: second),
       ],
     );
   }
@@ -319,9 +321,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
           "title": title.text.isEmpty ? null : title.text,
           "department": department.text.isEmpty ? null : department.text,
         },
-        if (role == "CARER") ...{
-          "professional": professional,
-        },
+        if (role == "CARER") ...{"professional": professional},
       });
       if (!context.mounted) return;
       Navigator.pop(context);

@@ -54,119 +54,82 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 760;
+
     return AlertDialog(
       title: const Text("Nuevo Usuario"),
 
       content: SizedBox(
-        width: 600,
+        width: isMobile ? MediaQuery.of(context).size.width * 0.9 : 600,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: username,
-                      decoration: const InputDecoration(labelText: "Username"),
-                    ),
-                  ),
-                  const SizedBox(width: 50),
-                  Expanded(
-                    child: TextField(
-                      controller: password,
-                      decoration: const InputDecoration(labelText: "Password"),
-                    ),
-                  ),
-                ],
+              _responsiveTwoFields(
+                isMobile: isMobile,
+                first: TextField(
+                  controller: username,
+                  decoration: const InputDecoration(labelText: "Username"),
+                ),
+                second: TextField(
+                  controller: password,
+                  decoration: const InputDecoration(labelText: "Password"),
+                ),
               ),
-              const SizedBox(height: 50),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: name,
-                      decoration: const InputDecoration(labelText: "Nombre"),
-                    ),
-                  ),
-                  const SizedBox(width: 50),
-                  Expanded(
-                    child: TextField(
-                      controller: lastnames,
-                      decoration: const InputDecoration(labelText: "Apellidos"),
-                    ),
-                  ),
-                ],
+              SizedBox(height: isMobile ? 20 : 50),
+              _responsiveTwoFields(
+                isMobile: isMobile,
+                first: TextField(
+                  controller: name,
+                  decoration: const InputDecoration(labelText: "Nombre"),
+                ),
+                second: TextField(
+                  controller: lastnames,
+                  decoration: const InputDecoration(labelText: "Apellidos"),
+                ),
               ),
-              const SizedBox(height: 50),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: email,
-                      decoration: const InputDecoration(labelText: "Email"),
-                    ),
-                  ),
-                  const SizedBox(width: 50),
-                  Expanded(
-                    child: TextField(
-                      controller: phone,
-                      decoration: const InputDecoration(labelText: "Teléfono"),
-                    ),
-                  ),
-                ],
+              SizedBox(height: isMobile ? 20 : 50),
+              _responsiveTwoFields(
+                isMobile: isMobile,
+                first: TextField(
+                  controller: email,
+                  decoration: const InputDecoration(labelText: "Email"),
+                ),
+                second: TextField(
+                  controller: phone,
+                  decoration: const InputDecoration(labelText: "Teléfono"),
+                ),
               ),
-              const SizedBox(height: 50),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      initialValue: gender,
-                      onChanged: (v) => setState(() => gender = v!),
-                      items: const [
-                        DropdownMenuItem(
-                          value: "MALE",
-                          child: Text("Masculino"),
-                        ),
-                        DropdownMenuItem(
-                          value: "FEMALE",
-                          child: Text("Femenino"),
-                        ),
-                        DropdownMenuItem(
-                          value: "UNKNOWN",
-                          child: Text("No especificado"),
-                        ),
-                      ],
-                      decoration: const InputDecoration(labelText: "Género"),
+              SizedBox(height: isMobile ? 20 : 50),
+              _responsiveTwoFields(
+                isMobile: isMobile,
+                first: DropdownButtonFormField<String>(
+                  initialValue: gender,
+                  onChanged: (v) => setState(() => gender = v!),
+                  items: const [
+                    DropdownMenuItem(value: "MALE", child: Text("Masculino")),
+                    DropdownMenuItem(value: "FEMALE", child: Text("Femenino")),
+                    DropdownMenuItem(
+                      value: "UNKNOWN",
+                      child: Text("No especificado"),
                     ),
-                  ),
-                  const SizedBox(width: 50),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      initialValue: role,
-                      onChanged: (v) {
-                        if (v != null) _onRoleChanged(v);
-                      },
-                      items: const [
-                        DropdownMenuItem(
-                          value: "MEDICAL",
-                          child: Text("Médico"),
-                        ),
-                        DropdownMenuItem(
-                          value: "PATIENT",
-                          child: Text("Paciente"),
-                        ),
-                        DropdownMenuItem(
-                          value: "CARER",
-                          child: Text("Cuidador"),
-                        ),
-                      ],
-                      decoration: const InputDecoration(labelText: "Rol"),
-                    ),
-                  ),
-                ],
+                  ],
+                  decoration: const InputDecoration(labelText: "Género"),
+                ),
+                second: DropdownButtonFormField<String>(
+                  initialValue: role,
+                  onChanged: (v) {
+                    if (v != null) _onRoleChanged(v);
+                  },
+                  items: const [
+                    DropdownMenuItem(value: "MEDICAL", child: Text("Médico")),
+                    DropdownMenuItem(value: "PATIENT", child: Text("Paciente")),
+                    DropdownMenuItem(value: "CARER", child: Text("Cuidador")),
+                  ],
+                  decoration: const InputDecoration(labelText: "Rol"),
+                ),
               ),
-              if (role == "PATIENT") ... [
+              if (role == "PATIENT") ...[
                 const SizedBox(height: 25),
                 TextField(
                   controller: birthdate,
@@ -237,14 +200,14 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                     showSearchBox: true,
 
                     searchFieldProps: const TextFieldProps(
-                      decoration: InputDecoration(
-                        labelText: "Buscar médico",
-                      ),
+                      decoration: InputDecoration(labelText: "Buscar médico"),
                     ),
 
                     itemBuilder: (context, item, isSelected) {
                       return ListTile(
-                        title: Text("${item.name ?? ''} ${item.lastnames ?? ''}"),
+                        title: Text(
+                          "${item.name ?? ''} ${item.lastnames ?? ''}",
+                        ),
                         subtitle: Text(item.username),
                       );
                     },
@@ -275,9 +238,7 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                   popupProps: PopupPropsMultiSelection.menu(
                     showSearchBox: true,
                     searchFieldProps: const TextFieldProps(
-                      decoration: InputDecoration(
-                        labelText: "Buscar cuidador",
-                      ),
+                      decoration: InputDecoration(labelText: "Buscar cuidador"),
                     ),
                   ),
 
@@ -288,27 +249,23 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                   ),
                 ),
               ],
-              if (role == "MEDICAL") ... [
+              if (role == "MEDICAL") ...[
                 const SizedBox(height: 25),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: title,
-                        decoration: const InputDecoration(labelText: "Título"),
-                      ),
+                _responsiveTwoFields(
+                  isMobile: isMobile,
+                  first: TextField(
+                    controller: title,
+                    decoration: const InputDecoration(labelText: "Título"),
+                  ),
+                  second: TextField(
+                    controller: department,
+                    decoration: const InputDecoration(
+                      labelText: "Departamento",
                     ),
-                    const SizedBox(width: 50),
-                    Expanded(
-                      child: TextField(
-                        controller: department,
-                        decoration: const InputDecoration(labelText: "Departamento"),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
-              if (role == "CARER") ... [
+              if (role == "CARER") ...[
                 const SizedBox(height: 25),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
@@ -367,11 +324,11 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                 },
                 if (role == "MEDICAL") ...{
                   "title": title.text.isEmpty ? null : title.text,
-                  "department": department.text.isEmpty ? null : department.text,
+                  "department": department.text.isEmpty
+                      ? null
+                      : department.text,
                 },
-                if (role == "CARER") ...{
-                  "professional": professional,
-                }
+                if (role == "CARER") ...{"professional": professional},
               });
 
               if (!context.mounted) return;
@@ -385,6 +342,24 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
           },
           child: const Text("Crear"),
         ),
+      ],
+    );
+  }
+
+  Widget _responsiveTwoFields({
+    required bool isMobile,
+    required Widget first,
+    required Widget second,
+  }) {
+    if (isMobile) {
+      return Column(children: [first, const SizedBox(height: 16), second]);
+    }
+
+    return Row(
+      children: [
+        Expanded(child: first),
+        const SizedBox(width: 50),
+        Expanded(child: second),
       ],
     );
   }
